@@ -1,0 +1,43 @@
+@namespace ToSicCre8magic.Theme.Basic01
+@inherits ContainerBase
+@inject ISettingService SettingService
+
+<div class="@_classes">
+    @if (_title && ModuleState.Title != "-")
+    {
+    <div class="row px-4">
+        <div class="d-flex flex-nowrap">
+            <ModuleActions /><h2><ModuleTitle /></h2>
+        </div>
+        <hr class="app-rule" />
+    </div>
+    }
+    else
+    {
+    <ModuleActions />
+    }
+
+    <ModuleInstance />
+</div>
+
+@code {
+    public override string Name => "ToSicCre8magic Basic01 - Container";
+
+    private bool _title = true;
+    private string _classes = "container py-4";
+
+    protected override void OnParametersSet()
+    {
+        try
+        {
+
+            _title = bool.Parse(SettingService.GetSetting(ModuleState.Settings, GetType().Namespace + ":Title", "true"));
+
+        }
+        catch
+        {
+            // error loading container settings
+        }
+    }
+
+}

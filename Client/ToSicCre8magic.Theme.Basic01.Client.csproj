@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Version>1.0.0</Version>
+    <Authors>ToSicCre8magic</Authors>
+    <Company>ToSicCre8magic</Company>
+    <Description>[Description]</Description>
+    <Product>ToSicCre8magic.Theme.Basic01</Product>
+    <Copyright>ToSicCre8magic</Copyright>
+    <AssemblyName>ToSicCre8magic.Theme.Basic01.Client.Oqtane</AssemblyName>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Themes\ToSicCre8magic.Theme.Basic01\Theme.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Localization" Version="9.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Oqtane.Client"><HintPath>..\..\oqtane.framework\Oqtane.Server\bin\Debug\net9.0\Oqtane.Client.dll</HintPath></Reference>
+    <Reference Include="Oqtane.Shared"><HintPath>..\..\oqtane.framework\Oqtane.Server\bin\Debug\net9.0\Oqtane.Shared.dll</HintPath></Reference>
+  </ItemGroup>
+
+	<Target Name="RunNpmInstallOrCi" BeforeTargets="Build" Condition="!Exists('node_modules')">
+		<Exec Command="if exist package-lock.json (npm ci) else (npm install)" />
+	</Target>
+
+	<Target Name="BuildFrontend" BeforeTargets="Build" DependsOnTargets="RunNpmInstallOrCi" Condition="'$(Configuration)' == 'Release'">
+		<Exec Command="npm run build" />
+	</Target>
+
+	<Target Name="BuildFrontendDebug" BeforeTargets="Build" DependsOnTargets="RunNpmInstallOrCi" Condition="'$(Configuration)' == 'Debug'">
+		<Exec Command="npm run dev" />
+	</Target>
+
+  <PropertyGroup>
+    <!-- there may be other elements here -->
+    <BlazorWebAssemblyEnableLinking>false</BlazorWebAssemblyEnableLinking>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+</Project>

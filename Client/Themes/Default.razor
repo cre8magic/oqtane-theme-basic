@@ -1,0 +1,83 @@
+@namespace ToSicCre8magic.Theme.Basic01
+@inherits ThemeBase
+@inject ISettingService SettingService
+
+@code {
+    public override string Name => "Default";
+
+    public override string Panes => PaneNames.Default + ",Header";
+
+    [Parameter]
+    public string Variant { get; set; } = "default";
+
+    private bool _login = true;
+    private bool _register = true;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+
+    protected override void OnParametersSet()
+    {
+        try
+        {
+            var settings = SettingService.MergeSettings(PageState.Site.Settings, PageState.Page.Settings);
+            _login = bool.Parse(SettingService.GetSetting(settings, GetType().Namespace + ":Login", "true"));
+            _register = bool.Parse(SettingService.GetSetting(settings, GetType().Namespace + ":Register", "true"));
+        }
+        catch
+        {
+            // error loading theme settings
+        }
+    }
+}
+
+
+<div data-bs-theme ="default-theme" data-theme-variant="@Variant">
+    @* FYI: data-bs-theme is for colors/fonts; data-theme-variant is for sizing etc. *@
+    <nav id="theme-page-navigation" class="navbar navbar-dark bg-primary sticky-top">
+        <Logo /><Menu Orientation="Horizontal" />
+        <div class="controls ms-auto">
+            <div class="controls-group">
+                <UserProfile ShowRegister="@_register" />
+                <Login ShowLogin="@_login"  />
+                <ControlPanel ButtonClass="btn-outline-light" />
+            </div>
+        </div>
+    </nav>
+
+    <div id="theme-page-header-pane" class="container-xxl px-0">
+        <Pane Name="Header" />
+    </div>
+
+    <main role="main" id="theme-page-main">
+        <Pane Name="@PaneNames.Default" />
+    </main>
+
+    <footer id="theme-page-footer" class="footer">
+      <div class="container py-4 d-flex justify-content-md-between flex-column flex-md-row text-white">
+        <ul class="theme-footer-address d-flex flex-column flex-xl-row" itemscope itemtype="http://schema.org/LocalBusiness">
+          <li>
+            <strong itemprop="name">2shine Oqtane BS5 2sxc </strong>
+          </li>
+          <li>
+            <span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+              <span itemprop="streetAddress">Shine Road 77</span>,
+              <span itemprop="postalCode">50355</span>
+              <span itemprop="addressLocality">Shine City</span>,
+              <span itemprop="addressCountry">Shine Country</span>
+            </span>
+          </li>
+            <li><a href="tel:+41817506777">+41 81 750 67 77</a></li>
+          <li>
+            <span data-madr1="shine" data-madr2="example" data-madr3="com" data-linktext=""></span>
+          </li>
+        </ul>
+        <div class="theme-footer-imprint">
+            <a href="/"> Imprint </a> |
+            <a href="/"> Datenschutz </a>
+        </div>
+      </div>
+    </footer>
+</div>

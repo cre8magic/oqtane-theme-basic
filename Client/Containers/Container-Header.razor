@@ -1,0 +1,41 @@
+@namespace ToSicCre8magic.Theme.Basic01
+@inherits ContainerBase
+@inject ISettingService SettingService
+
+@if (_title && ModuleState.Title != "-")
+{
+<div class="row px-4">
+    <div class="d-flex flex-nowrap">
+        <ModuleActions /><h2><ModuleTitle /></h2>
+    </div>
+    <hr class="app-rule" />
+</div>
+}
+else
+{
+<ModuleActions />
+}
+<div class="row">
+    <ModuleInstance />
+</div>
+
+@code {
+    public override string Name => "ToSicCre8magic Basic01 - Header";
+
+    private bool _title = true;
+
+    protected override void OnParametersSet()
+    {
+        try
+        {
+
+            _title = bool.Parse(SettingService.GetSetting(ModuleState.Settings, GetType().Namespace + ":Title", "true"));
+
+        }
+        catch
+        {
+            // error loading container settings
+        }
+    }
+
+}
