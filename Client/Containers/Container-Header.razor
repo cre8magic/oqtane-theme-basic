@@ -2,7 +2,7 @@
 @inherits ContainerBase
 @inject ISettingService SettingService
 
-@if (_title && ModuleState.Title != "-")
+@* @if (_title && ModuleState.Title != "-")
 {
 <div class="row px-4">
     <div class="d-flex flex-nowrap">
@@ -12,9 +12,9 @@
 </div>
 }
 else
-{
+{ *@
 <ModuleActions />
-}
+@* } *@
 <div class="row">
     <ModuleInstance />
 </div>

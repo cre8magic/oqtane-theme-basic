@@ -14,6 +14,8 @@
     private bool _login = true;
     private bool _register = true;
     private string _footerHtml = "";
+    private string _themeCss = "";
+
 
     protected override void OnInitialized()
     {
@@ -28,6 +30,7 @@
             _login = bool.Parse(SettingService.GetSetting(settings, GetType().Namespace + ":Login", "true"));
             _register = bool.Parse(SettingService.GetSetting(settings, GetType().Namespace + ":Register", "true"));
             _footerHtml = SettingService.GetSetting(settings, GetType().Namespace + ":FooterHtml", ""); 
+            _themeCss = SettingService.GetSetting(settings, GetType().Namespace + ":ThemeCss", "");
         }
         catch
         {
@@ -36,6 +39,11 @@
     }
 }
 
+@if (!string.IsNullOrWhiteSpace(_themeCss)) {
+    <style>
+        @((MarkupString)_themeCss)
+    </style>
+}
 
 <div data-bs-theme ="default-theme" data-theme-variant="@Variant">
     @* FYI: data-bs-theme is for colors/fonts; data-theme-variant is for sizing etc. *@
