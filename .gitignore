@@ -1,5 +1,6 @@
 bin/
 obj/
 InstallPackages/*.nupkg
+Package/*.nupkg
 **/.vs/
 Client/node_modules/

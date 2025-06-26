@@ -9,7 +9,7 @@ namespace ToSic.Cre8magic.Theme.Basic
     {
         public Oqtane.Models.Theme Theme => new Oqtane.Models.Theme
         {
-            Name = "ToSic.Cre8magic Basic",
+            Name = "ToSic Cre8magic Basic",
             Version = "1.0.0",
             PackageName = "ToSic.Cre8magic.Theme.Basic",
             ThemeSettingsType = "ToSic.Cre8magic.Theme.Basic.ThemeSettings, ToSic.Cre8magic.Theme.Basic.Client.Oqtane",
