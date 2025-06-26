@@ -1,4 +1,5 @@
 @namespace ToSicCre8magic.Theme.Basic
+@using ToSicCre8magic.Theme.Basic.Client.Themes
 @inherits ModuleBase
 @implements Oqtane.Interfaces.ISettingsControl
 @inject ISettingService SettingService
@@ -28,7 +29,7 @@
                 <option value="false">@SharedLocalizer["No"]</option>
             </select>
             @if (_scope != "site") {
-                <div class="small text-muted">SITE: @_loginMerge</div>
+                <div class="small text-muted">Site: @_loginMerge</div>
             }
         </div>
     </div>
@@ -41,18 +42,68 @@
                 <option value="false">@SharedLocalizer["No"]</option>
             </select>
             @if (_scope != "site") {
-            <div class="small text-muted">SITE: @_registerMerge</div>
+                <div class="small text-muted">Site: @_registerMerge</div>
             }
         </div>
     </div>
 
-    <div class="row mb-1 align-items-center">
-        <Label Class="col-sm-3" For="footerHtml" ResourceKey="FooterHtml" ResourceType="@resourceType" HelpText="Here you can insert your own HTML code for the footer">Footer HTML:</Label>
-        <div class="col-sm-9">
-            <textarea id="footerHtml" class="form-control" @bind="_footerHtml" rows="4"></textarea>
-            @if (_scope != "site") {
-            <div class="small text-muted">SITE: @_footerHtmlMerge</div>
-             }
+    <div class="accordion mb-3" id="footerHtmlAccordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFooterHtml">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFooterHtml" aria-expanded="false" aria-controls="collapseFooterHtml">
+                    @SharedLocalizer["Footer HTML"]
+                </button>
+            </h2>
+            <div id="collapseFooterHtml" class="accordion-collapse collapse" aria-labelledby="headingFooterHtml" data-bs-parent="#footerHtmlAccordion">
+                <div class="accordion-body">
+                    <div class="row mb-1 align-items-center">
+                        <div class="col-sm-3">
+                            <Label  For="footerHtml" ResourceKey="FooterHtml" ResourceType="@resourceType" HelpText="Here you can insert your own HTML code for the footer">Footer HTML:</Label>
+                            <button type="button" class="btn btn-secondary ms-2" @onclick="ShowDefaultFooterHtml">
+                                @SharedLocalizer["Show Default"]
+                            </button>
+                        </div>
+                        <div class="col-sm-9">
+                            <textarea id="footerHtml" class="form-control" @bind="_footerHtml" rows="4"></textarea>
+                            @if (_scope != "site")
+                            {
+                                <div class="small text-muted">
+                                    Site:
+                                    <pre>@_footerHtmlMerge</pre>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="accordion mb-3" id="themeColorAccordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThemeColor">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThemeColor" aria-expanded="false" aria-controls="collapseThemeColor">
+                    @SharedLocalizer["Theme Color"]
+                </button>
+            </h2>
+            <div id="collapseThemeColor" class="accordion-collapse collapse" aria-labelledby="headingThemeColor" data-bs-parent="#themeColorAccordion">
+                <div class="accordion-body">
+                    <div class="row mb-1 align-items-center">
+                        <Label class="col-sm-3" For="themeColor" ResourceKey="ThemeColor" ResourceType="@resourceType" HelpText="Here you can insert your own theme color CSS.">Theme Color:</Label>
+                        <div class="col-sm-9">
+                            <textarea id="themeColor" class="form-control" @bind="_themeColor" rows="2"></textarea>
+                            @if (_scope != "site")
+                            {
+                                <div class="small text-muted">
+                                    Site:
+                                    <pre>@_themeColorMerge</pre>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -65,10 +116,19 @@
     private string _login = "-";
     private string _register = "-";
     private string _footerHtml = "";
+    private string _themeColor = "";
 
     private string _loginMerge = "";
     private string _registerMerge = "";
     private string _footerHtmlMerge = "";
+    private string _themeColorMerge = "";
+
+
+    void ShowDefaultFooterHtml()
+    {
+        _footerHtml = ThemeConstants.DefaultFooterHtml;
+    }
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -90,12 +150,20 @@
 
     private async Task LoadSettings()
     {
+
+        // TODO: 2dg
+        // var settings = (_scope == "site")
+        //       ? await SettingService.GetSiteSettingsAsync(PageState.Site.SiteId)
+        //       : await SettingService.GetPageSettingsAsync(pageId);
+
         if (_scope == "site")
         {
             var settings = PageState.Site.Settings;
             _login = SettingService.GetSetting(settings, GetType().Namespace + ":Login", "true");
             _register = SettingService.GetSetting(settings, GetType().Namespace + ":Register", "true");
             _footerHtml = SettingService.GetSetting(settings, GetType().Namespace + ":FooterHtml", "");
+            _themeColor = SettingService.GetSetting(settings, GetType().Namespace + ":ThemeColor", "");
+
         }
         else
         {
@@ -103,12 +171,15 @@
             _login = SettingService.GetSetting(pageSettings, GetType().Namespace + ":Login", "-");
             _register = SettingService.GetSetting(pageSettings, GetType().Namespace + ":Register", "-");
             _footerHtml = SettingService.GetSetting(pageSettings, GetType().Namespace + ":FooterHtml", "");
+            _themeColor = SettingService.GetSetting(pageSettings, GetType().Namespace + ":ThemeColor", "");
 
             // mergedSettings:
             var mergedSettings = SettingService.MergeSettings(PageState.Site.Settings, pageSettings);
             _loginMerge = SettingService.GetSetting(mergedSettings, GetType().Namespace + ":Login", "-");
             _registerMerge = SettingService.GetSetting(mergedSettings, GetType().Namespace + ":Register", "-");
             _footerHtmlMerge = SettingService.GetSetting(mergedSettings, GetType().Namespace + ":FooterHtml", "");
+            _themeColorMerge = SettingService.GetSetting(mergedSettings, GetType().Namespace + ":ThemeColor", "");
+
         }
         await Task.Yield();
     }
@@ -164,8 +235,24 @@
                     await SettingService.DeleteSettingAsync(_scope, pageId, GetType().Namespace + ":FooterHtml");
                 }
 
+                if (!string.IsNullOrEmpty(_themeColor))
+                {
+                    settings = SettingService.SetSetting(settings, GetType().Namespace + ":ThemeColor", _themeColor);
 
-                    await SettingService.UpdateSiteSettingsAsync(settings, PageState.Site.SiteId);
+                }
+                else
+                {
+                    await SettingService.DeleteSettingAsync(_scope, pageId, GetType().Namespace + ":ThemeColor");
+                }
+
+                if (_scope == "site")
+                {
+                     await SettingService.UpdateSiteSettingsAsync(settings, PageState.Site.SiteId);
+                } else
+                {
+                    await SettingService.UpdatePageSettingsAsync(settings, pageId);
+                }
+
                 }
             }
             catch (Exception ex)
