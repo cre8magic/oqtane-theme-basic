@@ -3,22 +3,22 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Version>1.0.0</Version>
-    <Authors>ToSicCre8magic</Authors>
-    <Company>ToSicCre8magic</Company>
+    <Authors>ToSic.Cre8magic</Authors>
+    <Company>ToSic.Cre8magic</Company>
     <Description>[Description]</Description>
-    <Product>ToSicCre8magic.Theme.Basic</Product>
-    <Copyright>ToSicCre8magic</Copyright>
-    <AssemblyName>ToSicCre8magic.Theme.Basic.Client.Oqtane</AssemblyName>
+    <Product>ToSic.Cre8magic.Theme.Basic</Product>
+    <Copyright>ToSic.Cre8magic</Copyright>
+    <AssemblyName>ToSic.Cre8magic.Theme.Basic.Client.Oqtane</AssemblyName>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\Themes\ToSicCre8magic.Theme.Basic\Theme.css" />
+    <Content Remove="wwwroot\Themes\ToSic.Cre8magic.Theme.Basic\Theme.css" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\Themes\ToSicCre8magic.Theme.Basic\Theme.css" />
-    <None Include="wwwroot\Themes\ToSicCre8magic.Theme.Basic\Theme.css" />
+    <None Include="wwwroot\Themes\ToSic.Cre8magic.Theme.Basic\Theme.css" />
+    <None Include="wwwroot\Themes\ToSic.Cre8magic.Theme.Basic\Theme.css" />
   </ItemGroup>
 
   <ItemGroup>

@@ -3,17 +3,17 @@ using Oqtane.Models;
 using Oqtane.Themes;
 using Oqtane.Shared;
 
-namespace ToSicCre8magic.Theme.Basic
+namespace ToSic.Cre8magic.Theme.Basic
 {
     public class ThemeInfo : ITheme
     {
         public Oqtane.Models.Theme Theme => new Oqtane.Models.Theme
         {
-            Name = "ToSicCre8magic Basic",
+            Name = "ToSic.Cre8magic Basic",
             Version = "1.0.0",
-            PackageName = "ToSicCre8magic.Theme.Basic",
-            ThemeSettingsType = "ToSicCre8magic.Theme.Basic.ThemeSettings, ToSicCre8magic.Theme.Basic.Client.Oqtane",
-            ContainerSettingsType = "ToSicCre8magic.Theme.Basic.ContainerSettings, ToSicCre8magic.Theme.Basic.Client.Oqtane",
+            PackageName = "ToSic.Cre8magic.Theme.Basic",
+            ThemeSettingsType = "ToSic.Cre8magic.Theme.Basic.ThemeSettings, ToSic.Cre8magic.Theme.Basic.Client.Oqtane",
+            ContainerSettingsType = "ToSic.Cre8magic.Theme.Basic.ContainerSettings, ToSic.Cre8magic.Theme.Basic.Client.Oqtane",
             Resources = new List<Resource>()
             {
 		        // obtained from https://cdnjs.com/libraries

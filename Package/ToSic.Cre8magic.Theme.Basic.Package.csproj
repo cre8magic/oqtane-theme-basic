@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Client\ToSicCre8magic.Theme.Basic.Client.csproj" />
+    <ProjectReference Include="..\Client\ToSic.Cre8magic.Theme.Basic.Client.csproj" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

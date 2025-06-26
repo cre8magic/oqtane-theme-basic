@@ -1,4 +1,4 @@
-﻿namespace ToSicCre8magic.Theme.Basic.Client.Themes
+﻿namespace ToSic.Cre8magic.Theme.Basic.Client.Themes
 {
     class ThemeConstants
     {

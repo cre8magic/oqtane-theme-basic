@@ -1,4 +1,4 @@
 using System.Resources;
 using Microsoft.Extensions.Localization;
 
-[assembly: RootNamespace("ToSicCre8magic.Theme.Basic.Client")]
+[assembly: RootNamespace("ToSic.Cre8magic.Theme.Basic.Client")]
