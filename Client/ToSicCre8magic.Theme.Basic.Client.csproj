@@ -6,14 +6,19 @@
     <Authors>ToSicCre8magic</Authors>
     <Company>ToSicCre8magic</Company>
     <Description>[Description]</Description>
-    <Product>ToSicCre8magic.Theme.Basic01</Product>
+    <Product>ToSicCre8magic.Theme.Basic</Product>
     <Copyright>ToSicCre8magic</Copyright>
-    <AssemblyName>ToSicCre8magic.Theme.Basic01.Client.Oqtane</AssemblyName>
+    <AssemblyName>ToSicCre8magic.Theme.Basic.Client.Oqtane</AssemblyName>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\Themes\ToSicCre8magic.Theme.Basic01\Theme.css" />
+    <Content Remove="wwwroot\Themes\ToSicCre8magic.Theme.Basic\Theme.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Themes\ToSicCre8magic.Theme.Basic\Theme.css" />
+    <None Include="wwwroot\Themes\ToSicCre8magic.Theme.Basic\Theme.css" />
   </ItemGroup>
 
   <ItemGroup>
