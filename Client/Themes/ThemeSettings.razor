@@ -151,30 +151,18 @@
     private async Task LoadSettings()
     {
 
-        // TODO: 2dg
-        // var settings = (_scope == "site")
-        //       ? await SettingService.GetSiteSettingsAsync(PageState.Site.SiteId)
-        //       : await SettingService.GetPageSettingsAsync(pageId);
+        var settings = (_scope == "site")
+            ? await SettingService.GetSiteSettingsAsync(PageState.Site.SiteId)
+            : await SettingService.GetPageSettingsAsync(pageId);
 
-        if (_scope == "site")
+        _login = SettingService.GetSetting(settings, GetType().Namespace + ":Login", "-");
+        _register = SettingService.GetSetting(settings, GetType().Namespace + ":Register", "-");
+        _footerHtml = SettingService.GetSetting(settings, GetType().Namespace + ":FooterHtml", "");
+        _themeColor = SettingService.GetSetting(settings, GetType().Namespace + ":ThemeColor", "");
+
+        if (_scope == "page")
         {
-            var settings = PageState.Site.Settings;
-            _login = SettingService.GetSetting(settings, GetType().Namespace + ":Login", "true");
-            _register = SettingService.GetSetting(settings, GetType().Namespace + ":Register", "true");
-            _footerHtml = SettingService.GetSetting(settings, GetType().Namespace + ":FooterHtml", "");
-            _themeColor = SettingService.GetSetting(settings, GetType().Namespace + ":ThemeColor", "");
-
-        }
-        else
-        {
-            var pageSettings = await SettingService.GetPageSettingsAsync(pageId);
-            _login = SettingService.GetSetting(pageSettings, GetType().Namespace + ":Login", "-");
-            _register = SettingService.GetSetting(pageSettings, GetType().Namespace + ":Register", "-");
-            _footerHtml = SettingService.GetSetting(pageSettings, GetType().Namespace + ":FooterHtml", "");
-            _themeColor = SettingService.GetSetting(pageSettings, GetType().Namespace + ":ThemeColor", "");
-
-            // mergedSettings:
-            var mergedSettings = SettingService.MergeSettings(PageState.Site.Settings, pageSettings);
+            var mergedSettings = SettingService.MergeSettings(PageState.Site.Settings, settings);
             _loginMerge = SettingService.GetSetting(mergedSettings, GetType().Namespace + ":Login", "-");
             _registerMerge = SettingService.GetSetting(mergedSettings, GetType().Namespace + ":Register", "-");
             _footerHtmlMerge = SettingService.GetSetting(mergedSettings, GetType().Namespace + ":FooterHtml", "");
@@ -203,62 +191,59 @@
     {
         try
         {
-
             var settings = (_scope == "site")
                 ? await SettingService.GetSiteSettingsAsync(PageState.Site.SiteId)
-                : await  SettingService.GetPageSettingsAsync(pageId);
+                : await SettingService.GetPageSettingsAsync(pageId);
 
+            if (_login != "-")
             {
-                if (_login != "-")
-                {
-                    settings = SettingService.SetSetting(settings, GetType().Namespace + ":Login", _login);
-                } else {
-                    await SettingService.DeleteSettingAsync(_scope, pageId, GetType().Namespace + ":Login");
-                }
-
-
-                if (_register != "-")
-                {
-                    settings = SettingService.SetSetting(settings, GetType().Namespace + ":Register", _register);
-                }
-                else
-                {
-                    await SettingService.DeleteSettingAsync(_scope, pageId, GetType().Namespace + ":Register");
-                }
-
-                if (!string.IsNullOrEmpty(_footerHtml)) {
-                    settings = SettingService.SetSetting(settings, GetType().Namespace + ":FooterHtml", _footerHtml);
-
-                } 
-                else
-                {
-                    await SettingService.DeleteSettingAsync(_scope, pageId, GetType().Namespace + ":FooterHtml");
-                }
-
-                if (!string.IsNullOrEmpty(_themeColor))
-                {
-                    settings = SettingService.SetSetting(settings, GetType().Namespace + ":ThemeColor", _themeColor);
-
-                }
-                else
-                {
-                    await SettingService.DeleteSettingAsync(_scope, pageId, GetType().Namespace + ":ThemeColor");
-                }
-
-                if (_scope == "site")
-                {
-                     await SettingService.UpdateSiteSettingsAsync(settings, PageState.Site.SiteId);
-                } else
-                {
-                    await SettingService.UpdatePageSettingsAsync(settings, pageId);
-                }
-
-                }
+                settings = SettingService.SetSetting(settings, GetType().Namespace + ":Login", _login);
             }
-            catch (Exception ex)
+            else
             {
-                await logger.LogError(ex, "Error Saving Settings {Error}", ex.Message);
-                AddModuleMessage("Error Saving Settings", MessageType.Error);
+                await SettingService.DeleteSettingAsync(_scope, pageId, GetType().Namespace + ":Login");
+            }
+
+            if (_register != "-")
+            {
+                settings = SettingService.SetSetting(settings, GetType().Namespace + ":Register", _register);
+            }
+            else
+            {
+                await SettingService.DeleteSettingAsync(_scope, pageId, GetType().Namespace + ":Register");
+            }
+
+            if (!string.IsNullOrEmpty(_footerHtml))
+            {
+                settings = SettingService.SetSetting(settings, GetType().Namespace + ":FooterHtml", _footerHtml);
+            }
+            else
+            {
+                await SettingService.DeleteSettingAsync(_scope, pageId, GetType().Namespace + ":FooterHtml");
+            }
+
+            if (!string.IsNullOrEmpty(_themeColor))
+            {
+                settings = SettingService.SetSetting(settings, GetType().Namespace + ":ThemeColor", _themeColor);
+            }
+            else
+            {
+                await SettingService.DeleteSettingAsync(_scope, pageId, GetType().Namespace + ":ThemeColor");
+            }
+
+            if (_scope == "site")
+            {
+                await SettingService.UpdateSiteSettingsAsync(settings, PageState.Site.SiteId);
+            }
+            else
+            {
+                await SettingService.UpdatePageSettingsAsync(settings, pageId);
             }
         }
+        catch (Exception ex)
+        {
+            await logger.LogError(ex, "Error Saving Settings {Error}", ex.Message);
+            AddModuleMessage("Error Saving Settings", MessageType.Error);
+        }
     }
+}
