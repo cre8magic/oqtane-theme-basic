@@ -1,5 +1,5 @@
 @namespace ToSic.Cre8magic.Theme.Basic
-@using ToSic.Cre8magic.Theme.Basic.Client.Themes
+@using static ToSic.Cre8magic.Theme.Basic.Constants
 @inherits ModuleBase
 @implements Oqtane.Interfaces.ISettingsControl
 @inject ISettingService SettingService
@@ -9,10 +9,10 @@
 
     <div class="container">
         <div class="row mb-1 align-items-center">
-            <Label Class="col-sm-3" For="scope" ResourceKey="Scope" ResourceType="@resourceType" HelpText="Specify if the settings are applicable to this page or the entire site.">Setting Scope:</Label>
+            <Label Class="col-sm-3" For="scope" ResourceKey="Scope" ResourceType="@_resourceType" HelpText="Specify if the settings are applicable to this page or the entire site.">Setting Scope:</Label>
             <div class="col-sm-9">
-                <select id="scope" class="form-select" value="@_scope" @onchange="(e => ScopeChanged(e))">
-                    @if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
+                <select id="scope" class="form-select" value="@_scope" @onchange="(ScopeChanged)">
+                @if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
                 {
                     <option value="site">@Localizer["Site"]</option>
                 }
@@ -21,27 +21,29 @@
         </div>
     </div>
     <div class="row mb-1 align-items-center">
-        <Label Class="col-sm-3" For="login" ResourceKey="Login" ResourceType="@resourceType" HelpText="Specify if a Login option should be displayed. Note that this option does not prevent the login page from being accessible via a direct url.">Show Login?</Label>
+        <Label Class="col-sm-3" For="login" ResourceKey="Login" ResourceType="@_resourceType" HelpText="Specify if a Login option should be displayed. Note that this option does not prevent the login page from being accessible via a direct url.">Show Login?</Label>
         <div class="col-sm-9">
             <select id="login" class="form-select" @bind="@_login">
-                <option value="-">&lt;@SharedLocalizer["Not Specified"]&gt;</option>
+                <option value="">&lt;@SharedLocalizer["Not Specified"]&gt;</option>
                 <option value="true">@SharedLocalizer["Yes"]</option>
                 <option value="false">@SharedLocalizer["No"]</option>
             </select>
-            @if (_scope != "site") {
+            @if (_scope != "site")
+            {
                 <div class="small text-muted">Site: @_loginMerge</div>
             }
         </div>
     </div>
     <div class="row mb-1 align-items-center">
-        <Label Class="col-sm-3" For="register" ResourceKey="Register" ResourceType="@resourceType" HelpText="Specify if a Register option should be displayed. Note that this option is also dependent on the Allow Registration option in Site Settings.">Show Register?</Label>
+        <Label Class="col-sm-3" For="register" ResourceKey="Register" ResourceType="@_resourceType" HelpText="Specify if a Register option should be displayed. Note that this option is also dependent on the Allow Registration option in Site Settings.">Show Register?</Label>
         <div class="col-sm-9">
             <select id="register" class="form-select" @bind="@_register">
-                <option value="-">&lt;@SharedLocalizer["Not Specified"]&gt;</option>
+                <option value="">&lt;@SharedLocalizer["Not Specified"]&gt;</option>
                 <option value="true">@SharedLocalizer["Yes"]</option>
                 <option value="false">@SharedLocalizer["No"]</option>
             </select>
-            @if (_scope != "site") {
+            @if (_scope != "site")
+            {
                 <div class="small text-muted">Site: @_registerMerge</div>
             }
         </div>
@@ -58,8 +60,8 @@
                 <div class="accordion-body">
                     <div class="row mb-1 align-items-center">
                         <div class="col-sm-3">
-                            <Label  For="footerHtml" ResourceKey="FooterHtml" ResourceType="@resourceType" HelpText="Here you can insert your own HTML code for the footer">Footer HTML:</Label>
-                            <button type="button" class="btn btn-secondary ms-2" @onclick="ShowDefaultFooterHtml">
+                            <Label  For="footerHtml" ResourceKey="FooterHtml" ResourceType="@_resourceType" HelpText="Here you can insert your own HTML code for the footer">Footer HTML:</Label>
+                            <button type="button" class="btn btn-secondary ms-2" @onclick="() => _footerHtml = DefaultFooterHtml">
                                 @SharedLocalizer["Show Default"]
                             </button>
                         </div>
@@ -90,7 +92,7 @@
             <div id="collapseThemeColor" class="accordion-collapse collapse" aria-labelledby="headingThemeColor" data-bs-parent="#themeColorAccordion">
                 <div class="accordion-body">
                     <div class="row mb-1 align-items-center">
-                        <Label class="col-sm-3" For="themeCss" ResourceKey="ThemeCss" ResourceType="@resourceType" HelpText="Here you can insert your own Theme CSS.">Theme Color:</Label>
+                        <Label class="col-sm-3" For="themeCss" ResourceKey="ThemeCss" ResourceType="@_resourceType" HelpText="Here you can insert your own Theme CSS.">Theme Color:</Label>
                         <div class="col-sm-9">
                             <textarea id="themeCss" class="form-control" @bind="_themeCss" rows="2"></textarea>
                             @if (_scope != "site")
@@ -110,11 +112,11 @@
 </div>
 
 @code {
-    private int pageId = -1;
-    private string resourceType = "ToSic.Cre8magic.Theme.Basic.ThemeSettings, ToSic.Cre8magic.Theme.Basic.Client.Oqtane"; // for localization
+    private int _pageId = -1;
+    private readonly string _resourceType = ThemeInfo.Static.ThemeSettingsType;
     private string _scope = "page";
-    private string _login = "-";
-    private string _register = "-";
+    private string _login = "";
+    private string _register = "";
     private string _footerHtml = "";
     private string _themeCss = "";
 
@@ -124,18 +126,10 @@
     private string _themeCssMerge = "";
 
 
-    void ShowDefaultFooterHtml()
-    {
-        _footerHtml = ThemeConstants.DefaultFooterHtml;
-    }
-
-
     protected override async Task OnInitializedAsync()
     {
-        if (PageState.QueryString.ContainsKey("id"))
-        {
-            pageId = int.Parse(PageState.QueryString["id"]);
-        }
+        if (PageState.QueryString.TryGetValue("id", out var idString))
+            _pageId = int.Parse(idString);
 
         try
         {
@@ -150,24 +144,22 @@
 
     private async Task LoadSettings()
     {
+        var forPage = _scope == "page";
 
-        var settings = (_scope == "site")
-            ? await SettingService.GetSiteSettingsAsync(PageState.Site.SiteId)
-            : await SettingService.GetPageSettingsAsync(pageId);
-
-        _login = SettingService.GetSetting(settings, GetType().Namespace + ":Login", "-");
-        _register = SettingService.GetSetting(settings, GetType().Namespace + ":Register", "-");
-        _footerHtml = SettingService.GetSetting(settings, GetType().Namespace + ":FooterHtml", "");
-        _themeCss = SettingService.GetSetting(settings, GetType().Namespace + ":ThemeCss", "");
+        var helper = new SettingsHelper(SettingService, PageState.Site.SiteId, _pageId);
+        var reader = forPage ? await helper.Page() : await helper.Site();
+        _login = reader.Get(KeyLogin);
+        _register = reader.Get(KeyRegister);
+        _footerHtml = reader.Get(KeyFooterHtml);
+        _themeCss = reader.Get(KeyThemeCss);
 
         if (_scope == "page")
         {
-            var mergedSettings = SettingService.MergeSettings(PageState.Site.Settings, settings);
-            _loginMerge = SettingService.GetSetting(mergedSettings, GetType().Namespace + ":Login", "-");
-            _registerMerge = SettingService.GetSetting(mergedSettings, GetType().Namespace + ":Register", "-");
-            _footerHtmlMerge = SettingService.GetSetting(mergedSettings, GetType().Namespace + ":FooterHtml", "");
-            _themeCssMerge = SettingService.GetSetting(mergedSettings, GetType().Namespace + ":ThemeCss", "");
-
+            var mergedReader = await helper.Merged();
+            _loginMerge = mergedReader.Get(KeyLogin);
+            _registerMerge = mergedReader.Get(KeyRegister);
+            _footerHtmlMerge = mergedReader.Get(KeyFooterHtml);
+            _themeCssMerge = mergedReader.Get(KeyThemeCss);
         }
         await Task.Yield();
     }
@@ -191,59 +183,16 @@
     {
         try
         {
-            var settings = (_scope == "site")
-                ? await SettingService.GetSiteSettingsAsync(PageState.Site.SiteId)
-                : await SettingService.GetPageSettingsAsync(pageId);
+            var forSite = _scope == "site";
+            var saver = new SettingsSaver(SettingService, forSite ? "Site" : "Page", forSite ? PageState.Site.SiteId : _pageId);
+            await saver.Save(new()
+            {
+                [KeyLogin] = _login,
+                [KeyRegister] = _register,
+                [KeyFooterHtml] = _footerHtml,
+                [KeyThemeCss] = _themeCss
+            });
 
-            var id = (_scope == "site") ? PageState.Site.SiteId : pageId;
-            var entityType = (_scope == "site") ? "Site" : "Page";
-
-            if (_login != "-")
-            {
-                settings = SettingService.SetSetting(settings, GetType().Namespace + ":Login", _login);
-            }
-            else
-            {
-                await SettingService.DeleteSettingAsync(_scope, pageId, GetType().Namespace + ":Login");
-            }
-
-            if (_register != "-")
-            {
-                settings = SettingService.SetSetting(settings, GetType().Namespace + ":Register", _register);
-            }
-            else
-            {
-                await SettingService.DeleteSettingAsync(_scope, pageId, GetType().Namespace + ":Register");
-            }
-
-            if (!string.IsNullOrEmpty(_footerHtml))
-            {
-                settings = SettingService.SetSetting(settings, GetType().Namespace + ":FooterHtml", _footerHtml);
-            }
-            else
-            {
-                await SettingService.DeleteSettingAsync(entityType, id, GetType().Namespace + ":FooterHtml");
-                settings.Remove(GetType().Namespace + ":FooterHtml");
-            }
-
-            if (!string.IsNullOrEmpty(_themeCss))
-            {
-                settings = SettingService.SetSetting(settings, GetType().Namespace + ":ThemeCss", _themeCss);
-            }
-            else
-            {
-                await SettingService.DeleteSettingAsync(entityType, id, GetType().Namespace + ":ThemeCss");
-                settings.Remove(GetType().Namespace + ":ThemeCss");
-            }
-
-            if (_scope == "site")
-            {
-                await SettingService.UpdateSiteSettingsAsync(settings, PageState.Site.SiteId);
-            }
-            else
-            {
-                await SettingService.UpdatePageSettingsAsync(settings, pageId);
-            }
         }
         catch (Exception ex)
         {

@@ -1,5 +1,5 @@
 @namespace ToSic.Cre8magic.Theme.Basic
-@using ToSic.Cre8magic.Theme.Basic.Client.Themes
+@using static ToSic.Cre8magic.Theme.Basic.Constants
 @inherits ThemeBase
 @inject ISettingService SettingService
 
@@ -16,21 +16,15 @@
     private string _footerHtml = "";
     private string _themeCss = "";
 
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-    }
-
     protected override void OnParametersSet()
     {
         try
         {
             var settings = SettingService.MergeSettings(PageState.Site.Settings, PageState.Page.Settings);
-            _login = bool.Parse(SettingService.GetSetting(settings, GetType().Namespace + ":Login", "true"));
-            _register = bool.Parse(SettingService.GetSetting(settings, GetType().Namespace + ":Register", "true"));
-            _footerHtml = SettingService.GetSetting(settings, GetType().Namespace + ":FooterHtml", ""); 
-            _themeCss = SettingService.GetSetting(settings, GetType().Namespace + ":ThemeCss", "");
+            _login = bool.Parse(SettingService.GetSetting(settings, GetType().Namespace + KeyLogin, "true"));
+            _register = bool.Parse(SettingService.GetSetting(settings, GetType().Namespace + KeyRegister, "true"));
+            _footerHtml = SettingService.GetSetting(settings, GetType().Namespace + KeyFooterHtml, "");
+            _themeCss = SettingService.GetSetting(settings, GetType().Namespace + KeyThemeCss, "");
         }
         catch
         {
@@ -73,7 +67,7 @@
         }
         else
         {
-            @((MarkupString)ThemeConstants.DefaultFooterHtml)
+            @((MarkupString)Basic.Constants.DefaultFooterHtml)
         }
     </footer>
 

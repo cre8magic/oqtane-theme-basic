@@ -1,42 +1,46 @@
 @namespace ToSic.Cre8magic.Theme.Basic
 @inherits ContainerBase
 @inject ISettingService SettingService
-
-<div class="@_classes">
-@*     @if (_title && ModuleState.Title != "-")
-    {
-    <div class="row px-4">
-        <div class="d-flex flex-nowrap">
-            <ModuleActions />
-        </div>
-    </div>
-    }
-    else
-    { *@
-    <ModuleActions />
-    @* } *@
-
-    <ModuleInstance />
-</div>
-
+@*
+    This is the default container for normal page contents.
+   * It has minimal styling CSS classes on the wrapping div for a clean look.
+   * It will not show a title by default, since most modules will have better ways to display titles.
+*@
 @code {
-    public override string Name => "Cre8magic Basic - Container";
+    /// <summary>
+    /// Name of this container to be used in the UI
+    /// </summary>
+    public override string Name => "Cre8magic Basic - Container (default)";
 
-    private bool _title = false;
-    private string _classes = "container py-4";
+    /// <summary>
+    /// If we should show the title above the module; initialized in OnParametersSet; default is `false`.
+    /// </summary>
+    private bool _showTitle;
 
     protected override void OnParametersSet()
     {
         try
         {
-
-            _title = bool.Parse(SettingService.GetSetting(ModuleState.Settings, GetType().Namespace + ":Title", "true"));
-
+            _showTitle = bool.TryParse(SettingService.GetSetting(ModuleState.Settings, GetType().Namespace + ":Title", "false"), out var show) && show;
+            _showTitle = _showTitle && ModuleState.Title != "-" && !string.IsNullOrEmpty(ModuleState.Title);
         }
-        catch
-        {
-            // error loading container settings
-        }
+        catch { /* ignore */ }
+    }
+}
+
+<div class="container py-4">
+    @if (_showTitle)
+    {
+        <div class="row px-4">
+            <div class="d-flex flex-nowrap">
+                <ModuleActions />
+            </div>
+        </div>
+    }
+    else
+    {
+        <ModuleActions />
     }
 
-}
+    <ModuleInstance />
+</div>

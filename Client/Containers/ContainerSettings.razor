@@ -17,7 +17,7 @@
 </div>
 
 @code {
-	private string resourceType = "ToSic.Cre8magic.Theme.Basic.ContainerSettings, ToSic.Cre8magic.Theme.Basic.Client.Oqtane"; // for localization
+	private string resourceType = ThemeInfo.Static.ContainerSettingsType; // for localization
     private string _title = "true";
 
     protected override void OnInitialized()
@@ -25,7 +25,7 @@
         try
         {
 
-            _title = SettingService.GetSetting(ModuleState.Settings, GetType().Namespace + ":Title", "true");
+            _title = SettingService.GetSetting(ModuleState.Settings, Constants.KeyPrefix + ":Title", "true");
 
         }
         catch (Exception ex)
@@ -39,7 +39,7 @@
         try
         {
 			var settings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
-            settings = SettingService.SetSetting(settings, GetType().Namespace + ":Title", _title);
+            settings = SettingService.SetSetting(settings, Constants.KeyPrefix + ":Title", _title);
             await SettingService.UpdateModuleSettingsAsync(settings, ModuleState.ModuleId);
         }
         catch (Exception ex)
