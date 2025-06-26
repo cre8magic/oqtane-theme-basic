@@ -12,6 +12,7 @@
 
     private bool _login = true;
     private bool _register = true;
+    private string _footerHtml = "";
 
     protected override void OnInitialized()
     {
@@ -25,6 +26,7 @@
             var settings = SettingService.MergeSettings(PageState.Site.Settings, PageState.Page.Settings);
             _login = bool.Parse(SettingService.GetSetting(settings, GetType().Namespace + ":Login", "true"));
             _register = bool.Parse(SettingService.GetSetting(settings, GetType().Namespace + ":Register", "true"));
+            _footerHtml = SettingService.GetSetting(settings, GetType().Namespace + ":FooterHtml", ""); 
         }
         catch
         {
@@ -56,28 +58,36 @@
     </main>
 
     <footer id="theme-page-footer" class="footer">
-      <div class="container py-4 d-flex justify-content-md-between flex-column flex-md-row text-white">
-        <ul class="theme-footer-address d-flex flex-column flex-xl-row" itemscope itemtype="http://schema.org/LocalBusiness">
-          <li>
-            <strong itemprop="name">2shine Oqtane BS5 2sxc </strong>
-          </li>
-          <li>
-            <span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
-              <span itemprop="streetAddress">Shine Road 77</span>,
-              <span itemprop="postalCode">50355</span>
-              <span itemprop="addressLocality">Shine City</span>,
-              <span itemprop="addressCountry">Shine Country</span>
-            </span>
-          </li>
-            <li><a href="tel:+41817506777">+41 81 750 67 77</a></li>
-          <li>
-            <span data-madr1="shine" data-madr2="example" data-madr3="com" data-linktext=""></span>
-          </li>
-        </ul>
-        <div class="theme-footer-imprint">
-            <a href="/"> Imprint </a> |
-            <a href="/"> Datenschutz </a>
-        </div>
-      </div>
+        @if (!string.IsNullOrWhiteSpace(_footerHtml))
+        {
+            @((MarkupString)_footerHtml)
+        }
+        else
+        {
+            <div class="container py-4 d-flex justify-content-md-between flex-column flex-md-row text-white">
+                <ul class="theme-footer-address d-flex flex-column flex-xl-row" itemscope itemtype="http://schema.org/LocalBusiness">
+                    <li>
+                        <strong itemprop="name">Cre8magic Oqtane BS5 2sxc </strong>
+                    </li>
+                    <li>
+                        <span itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+                            <span itemprop="streetAddress">Cre8magic Road 77</span>,
+                            <span itemprop="postalCode">50355</span>
+                            <span itemprop="addressLocality">Cre8magic City</span>,
+                            <span itemprop="addressCountry">Cre8magic Country</span>
+                        </span>
+                    </li>
+                    <li><a href="tel:+41817506777">+41 81 750 67 77</a></li>
+                    <li>
+                        <span data-madr1="shine" data-madr2="example" data-madr3="com" data-linktext=""></span>
+                    </li>
+                </ul>
+                <div class="theme-footer-imprint">
+                    <a href="/"> Terms of Use </a> |
+                    <a href="/"> Privacy </a>
+                </div>
+            </div>
+        }
     </footer>
+
 </div>

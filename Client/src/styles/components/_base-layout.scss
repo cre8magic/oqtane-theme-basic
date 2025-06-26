@@ -2,7 +2,7 @@
 /*  _base-layout.scss                        */
 /*-------------------------------------------*/
 /*           This file is part of:           */
-/*                 2ShineBS5                 */
+/*                 cre8magic                 */
 /*            https://2shine.org/            */
 /*-------------------------------------------*/
 /*  Contains the base layout styles,         */
@@ -19,7 +19,6 @@ html {
         overflow-y: scroll;
         overflow-x: hidden;
         min-height: 100vh;
-        // background-color: var(--theme-backdrop-bg);
 
         &::before {
             content: "";

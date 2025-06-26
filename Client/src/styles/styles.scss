@@ -2,13 +2,13 @@
 /*  styles.scss                              */
 /*-------------------------------------------*/
 /*           This file is part of:           */
-/*                 2ShineBS5                 */
+/*                 cre8magic                 */
 /*            https://2shine.org/            */
 /*-------------------------------------------*/
 /*  This file imports and customizes         */
 /*  Bootstrap styles and includes            */
 /*  additional custom styles for the         */
-/*  2ShineBS5 skin.                          */
+/*  cre8magic skin.                          */
 /*********************************************/
 
 /* Check out Sass Customization: https://getbootstrap.com/docs/5.3/customize/sass/ */
@@ -56,7 +56,7 @@
 // @import "../../node_modules/bootstrap/scss/_progress.scss";
 // @import "../../node_modules/bootstrap/scss/_list-group.scss";
 // @import "../../node_modules/bootstrap/scss/_toasts.scss";
-// @import "../../node_modules/bootstrap/scss/_modal.scss";
+@import "../../node_modules/bootstrap/scss/_modal.scss";
 // @import "../../node_modules/bootstrap/scss/_tooltip.scss";
 // @import "../../node_modules/bootstrap/scss/_carousel.scss";
 // @import "../../node_modules/bootstrap/scss/_spinners.scss";
