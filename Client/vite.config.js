@@ -64,7 +64,7 @@ export default defineConfig(({ mode }) => {
       viteStaticCopy({
         targets: [
           {
-            src: ['./src/*.json', './src/assets', './node_modules/bootstrap/dist/js/bootstrap.bundle.min.*'],
+            src: ['./src/assets', './node_modules/bootstrap/dist/js/bootstrap.bundle.min.*'],
             dest: './'
           },
           // {
