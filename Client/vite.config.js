@@ -6,7 +6,7 @@ import fs from 'fs';
 
 // The value below must match the `Theme.PackageName` property in ThemeInfo.cs
 // This determines the output folder structure in wwwroot/Themes/ where static assets are stored
-const packageName = 'ToSicCre8magic.Theme.Basic01';
+const packageName = 'ToSicCre8magic.Theme.Basic';
 const distFolder = `wwwroot/Themes/${packageName}`;
 // const oqtaneTarget = resolve(__dirname, `../../oqtane.framework/Oqtane.Server/wwwroot/Themes`);
 
