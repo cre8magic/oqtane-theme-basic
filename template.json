@@ -1,6 +1,6 @@
 {
-  "Title": "Default Theme Template",
+  "Title": "Cre8magic Basic Templates",
   "Type": "External",
-  "Version": "5.2.0",
-  "Namespace": "ToSicCre8magic.Theme.Basic01"
+  "Version": "1.0.0",
+  "Namespace": "ToSicCre8magic.Theme.Basic"
 }
