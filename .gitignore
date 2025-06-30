@@ -4,3 +4,4 @@ InstallPackages/*.nupkg
 Package/*.nupkg
 **/.vs/
 Client/node_modules/
+/Client/exclude/
