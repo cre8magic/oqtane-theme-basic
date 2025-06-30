@@ -1,10 +1,12 @@
 @namespace ToSic.Cre8magic.Theme.Basic
+@using System.Diagnostics.CodeAnalysis
+@using ToSic.Cre8magic.Theme.Basic.Settings
 @inherits ContainerBase
-@inject ISettingService SettingService
+@inject OqtaneSettings OqtaneSettings
 @*
     This is the default container for normal page contents.
-   * It has minimal styling CSS classes on the wrapping div for a clean look.
-   * It will not show a title by default, since most modules will have better ways to display titles.
+    * It has minimal styling CSS classes on the wrapping div for a clean look.
+    * It will not show a title by default, since most modules will have better ways to display titles.
 *@
 @code {
     /// <summary>
@@ -12,24 +14,17 @@
     /// </summary>
     public override string Name => "Cre8magic Basic - Container (default)";
 
+    [field: AllowNull, MaybeNull]
+    private SettingsReader Settings => field ??= OqtaneSettings.GetModule(ModuleState);
+
     /// <summary>
     /// If we should show the title above the module; initialized in OnParametersSet; default is `false`.
     /// </summary>
-    private bool _showTitle;
-
-    protected override void OnParametersSet()
-    {
-        try
-        {
-            _showTitle = bool.TryParse(SettingService.GetSetting(ModuleState.Settings, GetType().Namespace + ":Title", "false"), out var show) && show;
-            _showTitle = _showTitle && ModuleState.Title != "-" && !string.IsNullOrEmpty(ModuleState.Title);
-        }
-        catch { /* ignore */ }
-    }
+    private bool ShowTitle => Settings.Bool(ThemeConstants.KeyShowTitle, false) && !string.IsNullOrEmpty(ModuleState.Title);
 }
 
 <div class="container py-4">
-    @if (_showTitle)
+    @if (ShowTitle)
     {
         <div class="row px-4">
             <div class="d-flex flex-nowrap">

@@ -1,20 +1,21 @@
 ﻿using System.Threading.Tasks;
+using Oqtane.Models;
 using Oqtane.Services;
 using Oqtane.Shared;
 using Oqtane.UI;
 
 namespace ToSic.Cre8magic.Theme.Basic.Settings;
 
-internal class MySettings(ISettingService settingService)
+internal class OqtaneSettings(ISettingService settingService)
 {
-    internal async Task<SettingsReader> GetModule(int moduleId)
-        => await GetReader(EntityNames.Module, moduleId);
-    internal async Task<SettingsReader> GetPage(int pageId)
-        => await GetReader(EntityNames.Page, pageId);
-    internal async Task<SettingsReader> GetSite(int siteId)
-        => await GetReader(EntityNames.Site, siteId);
+    internal async Task<SettingsReader> LoadModule(int moduleId)
+        => await Load(EntityNames.Module, moduleId);
+    internal async Task<SettingsReader> LoadPage(int pageId)
+        => await Load(EntityNames.Page, pageId);
+    internal async Task<SettingsReader> LoadSite(int siteId)
+        => await Load(EntityNames.Site, siteId);
 
-    public async Task<SettingsReader> GetReader(string entityName, int entityId)
+    public async Task<SettingsReader> Load(string entityName, int entityId)
     {
         var settings = await settingService.GetSettingsAsync(entityName, entityId);
         return new(settingService, entityName, entityId, settings);
@@ -29,5 +30,12 @@ internal class MySettings(ISettingService settingService)
         var siteReader = new SettingsReader(settingService, EntityNames.Site, pageState.Site.SiteId, ofSite);
         var merged = pageReader.MergeWith(siteReader);
         return merged;
+    }
+
+    public SettingsReader GetModule(Module moduleState)
+    {
+        var ofModule = moduleState.Settings ?? throw new("Module Settings cannot be null");
+        var moduleReader = new SettingsReader(settingService, EntityNames.Module, moduleState.ModuleId, ofModule);
+        return moduleReader;
     }
 }

@@ -24,7 +24,7 @@
         try
         {
 
-            _title = SettingService.GetSetting(ModuleState.Settings, Constants.KeyPrefix + ":Title", "true");
+            _title = SettingService.GetSetting(ModuleState.Settings, ThemeConstants.KeyShowTitle, "true");
 
         }
         catch (Exception ex)
@@ -38,7 +38,7 @@
         try
         {
 			var settings = await SettingService.GetModuleSettingsAsync(ModuleState.ModuleId);
-            settings = SettingService.SetSetting(settings, Constants.KeyPrefix + ":Title", _title);
+            settings = SettingService.SetSetting(settings, ThemeConstants.KeyShowTitle, _title);
             await SettingService.UpdateModuleSettingsAsync(settings, ModuleState.ModuleId);
         }
         catch (Exception ex)

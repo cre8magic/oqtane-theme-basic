@@ -16,6 +16,6 @@ public class ThemeStartup : Oqtane.Services.IClientStartup
     public void ConfigureServices(IServiceCollection services)
     {
         // Register the MySettings helper
-        services.AddTransient<MySettings>();
+        services.AddTransient<OqtaneSettings>();
     }
 }

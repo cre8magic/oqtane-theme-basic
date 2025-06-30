@@ -3,8 +3,8 @@
 @implements Oqtane.Interfaces.ISettingsControl
 @using ToSic.Cre8magic.Theme.Basic.Settings
 @using ToSic.Cre8magic.Theme.Basic.Utils
-@using static ToSic.Cre8magic.Theme.Basic.Constants
-@inject MySettings MySettings
+@using static ToSic.Cre8magic.Theme.Basic.ThemeConstants
+@inject OqtaneSettings OqtaneSettings
 @inject IStringLocalizer<ThemeSettings> Localizer
 @inject IStringLocalizer<SharedResources> SharedLocalizer
 @attribute [OqtaneIgnore]
@@ -33,8 +33,8 @@
     private async Task LoadSettings()
         => await RazorUtils.RunAsyncAndLogErrors(async () =>
         {
-            var siteSettings = await MySettings.GetSite(PageState.Site.SiteId);
-            var pageSettings = await MySettings.GetPage(_pageId);
+            var siteSettings = await OqtaneSettings.LoadSite(PageState.Site.SiteId);
+            var pageSettings = await OqtaneSettings.LoadPage(_pageId);
 
             var isPage = _scope == "page";
             _editor.Setup(

@@ -1,24 +1,25 @@
 @namespace ToSic.Cre8magic.Theme.Basic
 @using ToSic.Cre8magic.Theme.Basic.Settings
 @using ToSic.Cre8magic.Theme.Basic.Utils
-@using static ToSic.Cre8magic.Theme.Basic.Constants
+@using static ToSic.Cre8magic.Theme.Basic.ThemeConstants
 @inherits ThemeBase
-@inject MySettings MySettings
+@inject OqtaneSettings OqtaneSettings
 
 @code {
+    /// <summary>
+    /// Specify what layout variant to use. Will set an attribute on the wrapping div, so the CSS can adjust accordingly.
+    /// </summary>
+    [Parameter]
+    public string Variant { get; set; } = "default";
+
     public override string Name => "Default";
 
     public override string Panes => PaneNames.Default + ",Header";
 
-    [Parameter]
-    public string Variant { get; set; } = "default";
-
     private SettingsReader _settings = new();
 
     protected override void OnParametersSet()
-    {
-        RazorUtils.RunAndIgnoreErrors(() => _settings = MySettings.GetPage(PageState));
-    }
+        => RazorUtils.RunAndIgnoreErrors(() => _settings = OqtaneSettings.GetPage(PageState));
 }
 
 @* Add custom Css rules if provided in the page/site settings *@
