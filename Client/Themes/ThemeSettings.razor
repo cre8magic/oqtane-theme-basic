@@ -1,6 +1,7 @@
 @namespace ToSic.Cre8magic.Theme.Basic
 @inherits ModuleBase
 @implements Oqtane.Interfaces.ISettingsControl
+@using ToSic.Cre8magic.Theme.Basic.Settings
 @using ToSic.Cre8magic.Theme.Basic.Utils
 @using static ToSic.Cre8magic.Theme.Basic.Constants
 @inject MySettings MySettings
@@ -40,7 +41,7 @@
             var siteSettings = await MySettings.GetSite(PageState.Site.SiteId);
             var pageSettings = await MySettings.GetPage(_pageId);
 
-            _editor.Manager = _scopeIsPage ? pageSettings : siteSettings;
+            _editor.Main = _scopeIsPage ? pageSettings : siteSettings;
             _siteSettings = siteSettings;
 
             await Task.Yield();

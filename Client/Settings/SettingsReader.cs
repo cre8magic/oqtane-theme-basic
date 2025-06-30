@@ -1,8 +1,8 @@
-﻿using Oqtane.Services;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Oqtane.Services;
 
-namespace ToSic.Cre8magic.Theme.Basic;
+namespace ToSic.Cre8magic.Theme.Basic.Settings;
 
 internal class SettingsReader(ISettingService? settingService, string entityName, int entityId, Dictionary<string, string> settings)
 {

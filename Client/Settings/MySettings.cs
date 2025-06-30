@@ -1,9 +1,9 @@
-﻿using Oqtane.Services;
+﻿using System.Threading.Tasks;
+using Oqtane.Services;
 using Oqtane.Shared;
-using System.Threading.Tasks;
 using Oqtane.UI;
 
-namespace ToSic.Cre8magic.Theme.Basic;
+namespace ToSic.Cre8magic.Theme.Basic.Settings;
 
 internal class MySettings(ISettingService settingService)
 {
