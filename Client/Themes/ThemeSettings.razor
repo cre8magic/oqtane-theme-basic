@@ -15,10 +15,6 @@
 
     /// <summary>Scope we're currently editing - either "site" or "page" - is set in a drop-down</summary>
     private string _scope = "page";
-    private bool _scopeIsPage = true;
-
-    /// <summary>Site settings, used to show defaults for page settings</summary>
-    private SettingsReader? _siteSettings;
 
     /// <summary>Binders for the settings fields, allowing for easy data binding</summary>
     private readonly SettingsEditor _editor = new();
@@ -28,7 +24,6 @@
     {
         if (PageState.QueryString.TryGetValue("id", out var idString))
             _pageId = int.Parse(idString);
-
         await LoadSettings();
     }
 
@@ -41,8 +36,11 @@
             var siteSettings = await MySettings.GetSite(PageState.Site.SiteId);
             var pageSettings = await MySettings.GetPage(_pageId);
 
-            _editor.Main = _scopeIsPage ? pageSettings : siteSettings;
-            _siteSettings = siteSettings;
+            var isPage = _scope == "page";
+            _editor.Setup(
+                main: isPage ? pageSettings : siteSettings,
+                fallback: isPage ? siteSettings : null
+            );
 
             await Task.Yield();
         }, this, logger);
@@ -54,7 +52,6 @@
         => await RazorUtils.RunAsyncAndLogErrors(async () =>
         {
             _scope = (string)eventArgs.Value!;
-            _scopeIsPage = _scope == "page";
             await LoadSettings();
             StateHasChanged();
         }, this, logger);
@@ -90,9 +87,9 @@
                 <option value="true">@SharedLocalizer["Yes"]</option>
                 <option value="false">@SharedLocalizer["No"]</option>
             </select>
-            @if (_scopeIsPage)
+            @if (_editor.ShowFallback(KeyLogin))
             {
-                <div class="small text-muted">Site Default (if not set): @(_siteSettings?.Get(KeyLogin))</div>
+                <div class="small text-muted">Site Default (if not set): @(_editor.Fallback.Get(KeyLogin))</div>
             }
         </div>
     </div>
@@ -106,9 +103,9 @@
                 <option value="true">@SharedLocalizer["Yes"]</option>
                 <option value="false">@SharedLocalizer["No"]</option>
             </select>
-            @if (_scopeIsPage)
+            @if (_editor.ShowFallback(KeyRegister))
             {
-                <div class="small text-muted">Site Default (if not set): @(_siteSettings?.Get(KeyRegister))</div>
+                <div class="small text-muted">Site Default (if not set): @(_editor.Fallback.Get(KeyRegister))</div>
             }
         </div>
     </div>
@@ -132,11 +129,11 @@
                         </div>
                         <div class="col-sm-9">
                             <textarea id="footerHtml" class="form-control" @bind="@_editor[KeyFooterHtml].Value" rows="4"></textarea>
-                            @if (_scopeIsPage)
+                            @if (_editor.ShowFallback(KeyFooterHtml))
                             {
                                 <div class="small text-muted">
                                     Site Default (if not set): <br />
-                                    <pre>@(_siteSettings?.Get(KeyFooterHtml))</pre>
+                                    <pre>@(_editor.Fallback.Get(KeyFooterHtml))</pre>
                                 </div>
                             }
                         </div>
@@ -160,11 +157,11 @@
                         <Label class="col-sm-3" For="themeCss" ResourceKey="ThemeCss" ResourceType="@ThemeInfo.ThemeSettingsType" HelpText="Here you can insert your own Theme CSS.">Theme Color:</Label>
                         <div class="col-sm-9">
                             <textarea id="themeCss" class="form-control" @bind="_editor[KeyThemeCss].Value" rows="2"></textarea>
-                            @if (_scopeIsPage)
+                            @if (_editor.ShowFallback(KeyThemeCss))
                             {
                                 <div class="small text-muted">
                                     Site Default (if not set): <br />
-                                    <pre>@(_siteSettings?.Get(KeyThemeCss))</pre>
+                                    <pre>@(_editor.Fallback.Get(KeyThemeCss))</pre>
                                 </div>
                             }
                         </div>
@@ -173,6 +170,5 @@
             </div>
         </div>
     </div>
-
 </div>
 
