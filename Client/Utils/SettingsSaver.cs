@@ -5,12 +5,6 @@ using Oqtane.Services;
 
 namespace ToSic.Cre8magic.Theme.Basic;
 
-// TODO: @2dg
-// - change where it's used to use DI
-// - document how the DI works
-//   - Document how general DI works in themes
-//   - Document in the docs of this theme, that it uses DI
-
 /// <summary>
 /// Tool to help save settings for anything.
 /// </summary>
@@ -20,22 +14,22 @@ namespace ToSic.Cre8magic.Theme.Basic;
 /// <param name="settingService">The settings service, should use dependency injection</param>
 internal class SettingsSaver(ISettingService settingService)
 {
-    public async Task Save(string entityName, int entityId, Dictionary<string, string> values)
+    public async Task Save(SettingsReader reader, Dictionary<string, string> values)
     {
-        var settings = (await settingService.GetReader(entityName, entityId)).Settings;
+        var settings = reader.Settings;
 
         // Check for empty first, because we compare with the existing settings
         // to see if there was a value to remove in the first place.
         var cleanUp = values
             .Where(kvp => string.IsNullOrEmpty(kvp.Value))
-            .Select(kvp => Constants.KeyPrefix + kvp.Key)
+            .Select(kvp => kvp.Key)
             .Where(key => settings.ContainsKey(key))
             .ToList();
 
         // Clean list of things to update
         foreach (var kvp in values)
         {
-            var key = Constants.KeyPrefix + kvp.Key;
+            var key = kvp.Key;
             if (string.IsNullOrEmpty(kvp.Value))
                 settings.Remove(key);
             else
@@ -44,11 +38,11 @@ internal class SettingsSaver(ISettingService settingService)
 
         // If we have any updates left, then update them
         if (settings.Any())
-            await settingService.UpdateSettingsAsync(settings, entityName, entityId);
+            await settingService.UpdateSettingsAsync(settings, reader.EntityName, reader.EntityId);
 
         // Now delete the empty settings
         foreach (var settingName in cleanUp)
-            await settingService.DeleteSettingAsync(entityName, entityId, settingName);
+            await settingService.DeleteSettingAsync(reader.EntityName, reader.EntityId, settingName);
         
     }
 }

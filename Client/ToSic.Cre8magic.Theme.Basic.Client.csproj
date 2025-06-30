@@ -48,6 +48,7 @@
     <!-- there may be other elements here -->
     <BlazorWebAssemblyEnableLinking>false</BlazorWebAssemblyEnableLinking>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
 </Project>

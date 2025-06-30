@@ -11,15 +11,23 @@ internal class SettingsReader(ISettingService settingService, string entityName,
 
     public Dictionary<string, string> Settings => settings;
 
+    public bool IsMerged { get; init; }
+
+    protected ISettingService SettingService = settingService;
+
     public string Get(string key, string defaultValue = "")
-        => settingService.GetSetting(settings, Constants.KeyPrefix + key, defaultValue);
+        => SettingService.GetSetting(settings, Constants.KeyPrefix + key, defaultValue);
 
     public SettingsReader MergeWith(SettingsReader lowerPriorityReader)
     {
         // Clone the dictionaries, to not modify the original ones
         var primary = new Dictionary<string, string>(Settings);
         var secondary = new Dictionary<string, string>(lowerPriorityReader.Settings);
-        var mergedDic = settingService.MergeSettings(primary, secondary);
-        return new(settingService, entityName, entityId, mergedDic);
+        var mergedDic = SettingService.MergeSettings(primary, secondary);
+
+        return new(SettingService, entityName, entityId, mergedDic)
+        {
+            IsMerged = true,
+        };
     }
 }

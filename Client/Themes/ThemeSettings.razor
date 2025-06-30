@@ -7,11 +7,12 @@
 @inject IStringLocalizer<SharedResources> SharedLocalizer
 @attribute [OqtaneIgnore]
 
-    <div class="container">
-        <div class="row mb-1 align-items-center">
-            <Label Class="col-sm-3" For="scope" ResourceKey="Scope" ResourceType="@_resourceType" HelpText="Specify if the settings are applicable to this page or the entire site.">Setting Scope:</Label>
-            <div class="col-sm-9">
-                <select id="scope" class="form-select" value="@_scope" @onchange="(ScopeChanged)">
+<div class="container">
+    @* Choose Scope Site / Page *@
+    <div class="row mb-1 align-items-center">
+        <Label Class="col-sm-3" For="scope" ResourceKey="Scope" ResourceType="@_resourceType" HelpText="Specify if the settings are applicable to this page or the entire site.">Setting Scope:</Label>
+        <div class="col-sm-9">
+            <select id="scope" class="form-select" value="@_scope" @onchange="ScopeChanged">
                 @if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
                 {
                     <option value="site">@Localizer["Site"]</option>
@@ -20,35 +21,41 @@
             </select>
         </div>
     </div>
+
+    @* Enable Login *@
+    <text>Exp!</text>
     <div class="row mb-1 align-items-center">
         <Label Class="col-sm-3" For="login" ResourceKey="Login" ResourceType="@_resourceType" HelpText="Specify if a Login option should be displayed. Note that this option does not prevent the login page from being accessible via a direct url.">Show Login?</Label>
         <div class="col-sm-9">
-            <select id="login" class="form-select" @bind="@_login">
+            <select id="login" class="form-select" @bind="@_settingBinders[KeyLogin].Value">
                 <option value="">&lt;@SharedLocalizer["Not Specified"]&gt;</option>
                 <option value="true">@SharedLocalizer["Yes"]</option>
                 <option value="false">@SharedLocalizer["No"]</option>
             </select>
-            @if (_scope != "site")
+            @if (_scopeIsPage)
             {
-                <div class="small text-muted">Site: @_loginMerge</div>
-            }
-        </div>
-    </div>
-    <div class="row mb-1 align-items-center">
-        <Label Class="col-sm-3" For="register" ResourceKey="Register" ResourceType="@_resourceType" HelpText="Specify if a Register option should be displayed. Note that this option is also dependent on the Allow Registration option in Site Settings.">Show Register?</Label>
-        <div class="col-sm-9">
-            <select id="register" class="form-select" @bind="@_register">
-                <option value="">&lt;@SharedLocalizer["Not Specified"]&gt;</option>
-                <option value="true">@SharedLocalizer["Yes"]</option>
-                <option value="false">@SharedLocalizer["No"]</option>
-            </select>
-            @if (_scope != "site")
-            {
-                <div class="small text-muted">Site: @_registerMerge</div>
+                <div class="small text-muted">Site: @(_siteSettings?.Get(KeyLogin))</div>
             }
         </div>
     </div>
 
+    @* Enable Register *@
+    <div class="row mb-1 align-items-center">
+        <Label Class="col-sm-3" For="register" ResourceKey="Register" ResourceType="@_resourceType" HelpText="Specify if a Register option should be displayed. Note that this option is also dependent on the Allow Registration option in Site Settings.">Show Register?</Label>
+        <div class="col-sm-9">
+            <select id="register" class="form-select" @bind="@_settingBinders[KeyRegister].Value">
+                <option value="">&lt;@SharedLocalizer["Not Specified"]&gt;</option>
+                <option value="true">@SharedLocalizer["Yes"]</option>
+                <option value="false">@SharedLocalizer["No"]</option>
+            </select>
+            @if (_scopeIsPage)
+            {
+                <div class="small text-muted">Site: @(_siteSettings?.Get(KeyRegister))</div>
+            }
+        </div>
+    </div>
+    
+    @* Footer HTML *@
     <div class="accordion mb-3" id="footerHtmlAccordion">
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingFooterHtml">
@@ -60,18 +67,18 @@
                 <div class="accordion-body">
                     <div class="row mb-1 align-items-center">
                         <div class="col-sm-3">
-                            <Label  For="footerHtml" ResourceKey="FooterHtml" ResourceType="@_resourceType" HelpText="Here you can insert your own HTML code for the footer">Footer HTML:</Label>
-                            <button type="button" class="btn btn-secondary ms-2" @onclick="() => _footerHtml = DefaultFooterHtml">
+                            <Label For="footerHtml" ResourceKey="FooterHtml" ResourceType="@_resourceType" HelpText="Here you can insert your own HTML code for the footer">Footer HTML:</Label>
+                            <button type="button" class="btn btn-secondary ms-2" @onclick="() => _settingBinders[KeyFooterHtml].Value = DefaultFooterHtml">
                                 @SharedLocalizer["Show Default"]
                             </button>
                         </div>
                         <div class="col-sm-9">
-                            <textarea id="footerHtml" class="form-control" @bind="_footerHtml" rows="4"></textarea>
-                            @if (_scope != "site")
+                            <textarea id="footerHtml" class="form-control" @bind="@_settingBinders[KeyFooterHtml].Value" rows="4"></textarea>
+                            @if (_scopeIsPage)
                             {
                                 <div class="small text-muted">
                                     Site:
-                                    <pre>@_footerHtmlMerge</pre>
+                                    <pre>@(_siteSettings?.Get(KeyFooterHtml))</pre>
                                 </div>
                             }
                         </div>
@@ -81,7 +88,7 @@
         </div>
     </div>
 
-
+    @* Theme CSS *@
     <div class="accordion mb-3" id="themeColorAccordion">
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingThemeColor">
@@ -94,12 +101,12 @@
                     <div class="row mb-1 align-items-center">
                         <Label class="col-sm-3" For="themeCss" ResourceKey="ThemeCss" ResourceType="@_resourceType" HelpText="Here you can insert your own Theme CSS.">Theme Color:</Label>
                         <div class="col-sm-9">
-                            <textarea id="themeCss" class="form-control" @bind="_themeCss" rows="2"></textarea>
-                            @if (_scope != "site")
+                            <textarea id="themeCss" class="form-control" @bind="_settingBinders[KeyThemeCss].Value" rows="2"></textarea>
+                            @if (_scopeIsPage)
                             {
                                 <div class="small text-muted">
                                     Site:
-                                    <pre>@_themeCssMerge</pre>
+                                    <pre>@(_siteSettings?.Get(KeyThemeCss))</pre>
                                 </div>
                             }
                         </div>
@@ -115,16 +122,10 @@
     private int _pageId = -1;
     private readonly string _resourceType = ThemeInfo.Static.ThemeSettingsType;
     private string _scope = "page";
-    private SettingsReader _current;
-    private string _login = "";
-    private string _register = "";
-    private string _footerHtml = "";
-    private string _themeCss = "";
-
-    private string _loginMerge = "";
-    private string _registerMerge = "";
-    private string _footerHtmlMerge = "";
-    private string _themeCssMerge = "";
+    private bool _scopeIsPage = true;
+    private SettingsEditor? _current;
+    private SettingsReader? _siteSettings;
+    private readonly SettingBinderManager _settingBinders = new();
 
 
     protected override async Task OnInitializedAsync()
@@ -145,24 +146,14 @@
 
     private async Task LoadSettings()
     {
-        var siteSettings = await MySettings.GetSite(PageState.Site.SiteId);
-        var pageSettings = await MySettings.GetPage(_pageId);
-        
-        var forPage = _scope == "page";
-        _current = forPage ? pageSettings : siteSettings;
-        _login = _current.Get(KeyLogin);
-        _register = _current.Get(KeyRegister);
-        _footerHtml = _current.Get(KeyFooterHtml);
-        _themeCss = _current.Get(KeyThemeCss);
+        var siteSettings = await MySettings.EditSite(PageState.Site.SiteId);
+        var pageSettings = await MySettings.EditPage(_pageId);
 
-        if (forPage)
-        {
-            var mergedReader = pageSettings.MergeWith(siteSettings);
-            _loginMerge = mergedReader.Get(KeyLogin);
-            _registerMerge = mergedReader.Get(KeyRegister);
-            _footerHtmlMerge = mergedReader.Get(KeyFooterHtml);
-            _themeCssMerge = mergedReader.Get(KeyThemeCss);
-        }
+        _current = _scopeIsPage ? pageSettings : siteSettings;
+        _settingBinders.SetEditor(_current);
+        _siteSettings = siteSettings;
+
+        StateHasChanged();
         await Task.Yield();
     }
 
@@ -170,7 +161,8 @@
     {
         try
         {
-            _scope = (string)eventArgs.Value;
+            _scope = (string)eventArgs.Value!;
+            _scopeIsPage = _scope == "page";
             await LoadSettings();
             StateHasChanged();
         }
@@ -185,18 +177,7 @@
     {
         try
         {
-            var forSite = _scope == "site";
-            await MySettings.Save(
-                forSite ? EntityNames.Site : EntityNames.Page,
-                forSite ? PageState.Site.SiteId : _pageId,
-                new()
-                {
-                    [KeyLogin] = _login,
-                    [KeyRegister] = _register,
-                    [KeyFooterHtml] = _footerHtml,
-                    [KeyThemeCss] = _themeCss
-                });
-
+            await _current!.Save();
         }
         catch (Exception ex)
         {
