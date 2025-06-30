@@ -16,14 +16,11 @@
     private string _scope = "page";
     private bool _scopeIsPage = true;
 
-    /// <summary>Current settings which are being edited - either site or page settings</summary>
-    private SettingsEditor? _current;
-
     /// <summary>Site settings, used to show defaults for page settings</summary>
     private SettingsReader? _siteSettings;
 
     /// <summary>Binders for the settings fields, allowing for easy data binding</summary>
-    private readonly SettingBinderManager _binders = new();
+    private readonly SettingsEditor _editor = new();
 
     /// <summary>Initializer / On-Load</summary>
     protected override async Task OnInitializedAsync()
@@ -40,11 +37,11 @@
     private async Task LoadSettings()
         => await RazorUtils.RunAsyncAndLogErrors(async () =>
         {
-            var siteSettings = await MySettings.EditSite(PageState.Site.SiteId);
-            var pageSettings = await MySettings.EditPage(_pageId);
+            var siteSettings = await MySettings.GetSite(PageState.Site.SiteId);
+            var pageSettings = await MySettings.GetPage(_pageId);
 
-            _current = _scopeIsPage ? pageSettings : siteSettings;
-            _binders.SetEditor(_current);
+            var current = _scopeIsPage ? pageSettings : siteSettings;
+            _editor.Manager = current;
             _siteSettings = siteSettings;
 
             await Task.Yield();
@@ -66,7 +63,7 @@
     /// Handle the save action for the settings. Will be called by the Oqtane framework.
     /// </summary>
     public async Task UpdateSettings()
-        => await RazorUtils.RunAsyncAndLogErrors(() => _current!.Save(), this, logger);
+        => await RazorUtils.RunAsyncAndLogErrors(() => _editor!.Save(), this, logger);
 }
 
 <div class="container">
@@ -89,7 +86,7 @@
     <div class="row mb-1 align-items-center">
         <Label Class="col-sm-3" For="login" ResourceKey="Login" ResourceType="@ThemeInfo.ThemeSettingsType" HelpText="Specify if a Login option should be displayed. Note that this option does not prevent the login page from being accessible via a direct url.">Show Login?</Label>
         <div class="col-sm-9">
-            <select id="login" class="form-select" @bind="@_binders[KeyLogin].Value">
+            <select id="login" class="form-select" @bind="@_editor[KeyLogin].Value">
                 <option value="">&lt;@SharedLocalizer["Not Specified"]&gt;</option>
                 <option value="true">@SharedLocalizer["Yes"]</option>
                 <option value="false">@SharedLocalizer["No"]</option>
@@ -105,7 +102,7 @@
     <div class="row mb-1 align-items-center">
         <Label Class="col-sm-3" For="register" ResourceKey="Register" ResourceType="@ThemeInfo.ThemeSettingsType" HelpText="Specify if a Register option should be displayed. Note that this option is also dependent on the Allow Registration option in Site Settings.">Show Register?</Label>
         <div class="col-sm-9">
-            <select id="register" class="form-select" @bind="@_binders[KeyRegister].Value">
+            <select id="register" class="form-select" @bind="@_editor[KeyRegister].Value">
                 <option value="">&lt;@SharedLocalizer["Not Specified"]&gt;</option>
                 <option value="true">@SharedLocalizer["Yes"]</option>
                 <option value="false">@SharedLocalizer["No"]</option>
@@ -130,12 +127,12 @@
                     <div class="row mb-1 align-items-center">
                         <div class="col-sm-3">
                             <Label For="footerHtml" ResourceKey="FooterHtml" ResourceType="@ThemeInfo.ThemeSettingsType" HelpText="Here you can insert your own HTML code for the footer">Footer HTML:</Label>
-                            <button type="button" class="btn btn-secondary ms-2" @onclick="() => _binders[KeyFooterHtml].Value = DefaultFooterHtml">
+                            <button type="button" class="btn btn-secondary ms-2" @onclick="() => _editor[KeyFooterHtml].Value = DefaultFooterHtml">
                                 @SharedLocalizer["Show Default"]
                             </button>
                         </div>
                         <div class="col-sm-9">
-                            <textarea id="footerHtml" class="form-control" @bind="@_binders[KeyFooterHtml].Value" rows="4"></textarea>
+                            <textarea id="footerHtml" class="form-control" @bind="@_editor[KeyFooterHtml].Value" rows="4"></textarea>
                             @if (_scopeIsPage)
                             {
                                 <div class="small text-muted">
@@ -163,7 +160,7 @@
                     <div class="row mb-1 align-items-center">
                         <Label class="col-sm-3" For="themeCss" ResourceKey="ThemeCss" ResourceType="@ThemeInfo.ThemeSettingsType" HelpText="Here you can insert your own Theme CSS.">Theme Color:</Label>
                         <div class="col-sm-9">
-                            <textarea id="themeCss" class="form-control" @bind="_binders[KeyThemeCss].Value" rows="2"></textarea>
+                            <textarea id="themeCss" class="form-control" @bind="_editor[KeyThemeCss].Value" rows="2"></textarea>
                             @if (_scopeIsPage)
                             {
                                 <div class="small text-muted">

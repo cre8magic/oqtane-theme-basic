@@ -17,10 +17,10 @@ internal class SettingsReader(ISettingService? settingService, string entityName
 
     public bool IsMerged { get; init; }
 
-    protected ISettingService? SettingService = settingService;
+    internal ISettingService? SettingService = settingService;
 
     public string Get(string key, string defaultValue = "")
-        => SettingService?.GetSetting(settings, Constants.KeyPrefix + key, defaultValue) ?? defaultValue;
+        => SettingService?.GetSetting(settings, key, defaultValue) ?? defaultValue;
 
     public bool TryGet(string key, [NotNullWhen(true)] out string? value)
         => TryGet(key, "", out value);

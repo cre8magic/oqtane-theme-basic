@@ -14,17 +14,7 @@ internal class MySettings(ISettingService settingService)
     internal async Task<SettingsReader> GetSite(int siteId)
         => await GetReader(EntityNames.Site, siteId);
 
-    internal async Task<SettingsEditor> EditPage(int pageId)
-        => await GetEditor(EntityNames.Page, pageId);
-    internal async Task<SettingsEditor> EditSite(int siteId)
-        => await GetEditor(EntityNames.Site, siteId);
-
     public async Task<SettingsReader> GetReader(string entityName, int entityId)
-    {
-        var settings = await settingService.GetSettingsAsync(entityName, entityId);
-        return new(settingService, entityName, entityId, settings);
-    }
-    public async Task<SettingsEditor> GetEditor(string entityName, int entityId)
     {
         var settings = await settingService.GetSettingsAsync(entityName, entityId);
         return new(settingService, entityName, entityId, settings);
