@@ -8,7 +8,7 @@
 @attribute [OqtaneIgnore]
 
 <div class="container">
-    @* Choose Scope Site / Page *@
+    @* Choose Scope Site / Page - affects remaining fields *@
     <div class="row mb-1 align-items-center">
         <Label Class="col-sm-3" For="scope" ResourceKey="Scope" ResourceType="@_resourceType" HelpText="Specify if the settings are applicable to this page or the entire site.">Setting Scope:</Label>
         <div class="col-sm-9">
@@ -27,14 +27,14 @@
     <div class="row mb-1 align-items-center">
         <Label Class="col-sm-3" For="login" ResourceKey="Login" ResourceType="@_resourceType" HelpText="Specify if a Login option should be displayed. Note that this option does not prevent the login page from being accessible via a direct url.">Show Login?</Label>
         <div class="col-sm-9">
-            <select id="login" class="form-select" @bind="@_settingBinders[KeyLogin].Value">
+            <select id="login" class="form-select" @bind="@_binders[KeyLogin].Value">
                 <option value="">&lt;@SharedLocalizer["Not Specified"]&gt;</option>
                 <option value="true">@SharedLocalizer["Yes"]</option>
                 <option value="false">@SharedLocalizer["No"]</option>
             </select>
             @if (_scopeIsPage)
             {
-                <div class="small text-muted">Site: @(_siteSettings?.Get(KeyLogin))</div>
+                <div class="small text-muted">Site Default (if not set): @(_siteSettings?.Get(KeyLogin))</div>
             }
         </div>
     </div>
@@ -43,14 +43,14 @@
     <div class="row mb-1 align-items-center">
         <Label Class="col-sm-3" For="register" ResourceKey="Register" ResourceType="@_resourceType" HelpText="Specify if a Register option should be displayed. Note that this option is also dependent on the Allow Registration option in Site Settings.">Show Register?</Label>
         <div class="col-sm-9">
-            <select id="register" class="form-select" @bind="@_settingBinders[KeyRegister].Value">
+            <select id="register" class="form-select" @bind="@_binders[KeyRegister].Value">
                 <option value="">&lt;@SharedLocalizer["Not Specified"]&gt;</option>
                 <option value="true">@SharedLocalizer["Yes"]</option>
                 <option value="false">@SharedLocalizer["No"]</option>
             </select>
             @if (_scopeIsPage)
             {
-                <div class="small text-muted">Site: @(_siteSettings?.Get(KeyRegister))</div>
+                <div class="small text-muted">Site Default (if not set): @(_siteSettings?.Get(KeyRegister))</div>
             }
         </div>
     </div>
@@ -68,16 +68,16 @@
                     <div class="row mb-1 align-items-center">
                         <div class="col-sm-3">
                             <Label For="footerHtml" ResourceKey="FooterHtml" ResourceType="@_resourceType" HelpText="Here you can insert your own HTML code for the footer">Footer HTML:</Label>
-                            <button type="button" class="btn btn-secondary ms-2" @onclick="() => _settingBinders[KeyFooterHtml].Value = DefaultFooterHtml">
+                            <button type="button" class="btn btn-secondary ms-2" @onclick="() => _binders[KeyFooterHtml].Value = DefaultFooterHtml">
                                 @SharedLocalizer["Show Default"]
                             </button>
                         </div>
                         <div class="col-sm-9">
-                            <textarea id="footerHtml" class="form-control" @bind="@_settingBinders[KeyFooterHtml].Value" rows="4"></textarea>
+                            <textarea id="footerHtml" class="form-control" @bind="@_binders[KeyFooterHtml].Value" rows="4"></textarea>
                             @if (_scopeIsPage)
                             {
                                 <div class="small text-muted">
-                                    Site:
+                                    Site Default (if not set): <br />
                                     <pre>@(_siteSettings?.Get(KeyFooterHtml))</pre>
                                 </div>
                             }
@@ -101,11 +101,11 @@
                     <div class="row mb-1 align-items-center">
                         <Label class="col-sm-3" For="themeCss" ResourceKey="ThemeCss" ResourceType="@_resourceType" HelpText="Here you can insert your own Theme CSS.">Theme Color:</Label>
                         <div class="col-sm-9">
-                            <textarea id="themeCss" class="form-control" @bind="_settingBinders[KeyThemeCss].Value" rows="2"></textarea>
+                            <textarea id="themeCss" class="form-control" @bind="_binders[KeyThemeCss].Value" rows="2"></textarea>
                             @if (_scopeIsPage)
                             {
                                 <div class="small text-muted">
-                                    Site:
+                                    Site Default (if not set): <br />
                                     <pre>@(_siteSettings?.Get(KeyThemeCss))</pre>
                                 </div>
                             }
@@ -125,7 +125,7 @@
     private bool _scopeIsPage = true;
     private SettingsEditor? _current;
     private SettingsReader? _siteSettings;
-    private readonly SettingBinderManager _settingBinders = new();
+    private readonly SettingBinderManager _binders = new();
 
 
     protected override async Task OnInitializedAsync()
@@ -150,10 +150,10 @@
         var pageSettings = await MySettings.EditPage(_pageId);
 
         _current = _scopeIsPage ? pageSettings : siteSettings;
-        _settingBinders.SetEditor(_current);
+        _binders.SetEditor(_current);
         _siteSettings = siteSettings;
 
-        StateHasChanged();
+        // StateHasChanged();
         await Task.Yield();
     }
 
