@@ -5,9 +5,22 @@ using Oqtane.Services;
 
 namespace ToSic.Cre8magic.Theme.Basic;
 
-public class SettingsSaver(ISettingService settingService, string entityName, int entityId)
+// TODO: @2dg
+// - change where it's used to use DI
+// - document how the DI works
+//   - Document how general DI works in themes
+//   - Document in the docs of this theme, that it uses DI
+
+/// <summary>
+/// Tool to help save settings for anything.
+/// </summary>
+/// <remarks>
+/// It must be internal, to ensure that it will not conflict with other themes which may have the same class.
+/// </remarks>
+/// <param name="settingService">The settings service, should use dependency injection</param>
+internal class SettingsSaver(ISettingService settingService)
 {
-    public async Task Save(Dictionary<string, string> values)
+    public async Task Save(string entityName, int entityId, Dictionary<string, string> values)
     {
         var settings = (await settingService.GetReader(entityName, entityId)).Settings;
 

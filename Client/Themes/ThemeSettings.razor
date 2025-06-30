@@ -1,8 +1,8 @@
 @namespace ToSic.Cre8magic.Theme.Basic
-@using static ToSic.Cre8magic.Theme.Basic.Constants
 @inherits ModuleBase
 @implements Oqtane.Interfaces.ISettingsControl
-@inject ISettingService SettingService
+@using static ToSic.Cre8magic.Theme.Basic.Constants
+@inject MySettings MySettings
 @inject IStringLocalizer<ThemeSettings> Localizer
 @inject IStringLocalizer<SharedResources> SharedLocalizer
 @attribute [OqtaneIgnore]
@@ -115,6 +115,7 @@
     private int _pageId = -1;
     private readonly string _resourceType = ThemeInfo.Static.ThemeSettingsType;
     private string _scope = "page";
+    private SettingsReader _current;
     private string _login = "";
     private string _register = "";
     private string _footerHtml = "";
@@ -144,18 +145,19 @@
 
     private async Task LoadSettings()
     {
+        var siteSettings = await MySettings.GetSite(PageState.Site.SiteId);
+        var pageSettings = await MySettings.GetPage(_pageId);
+        
         var forPage = _scope == "page";
+        _current = forPage ? pageSettings : siteSettings;
+        _login = _current.Get(KeyLogin);
+        _register = _current.Get(KeyRegister);
+        _footerHtml = _current.Get(KeyFooterHtml);
+        _themeCss = _current.Get(KeyThemeCss);
 
-        var helper = new SettingsHelper(SettingService, PageState.Site.SiteId, _pageId);
-        var reader = forPage ? await helper.Page() : await helper.Site();
-        _login = reader.Get(KeyLogin);
-        _register = reader.Get(KeyRegister);
-        _footerHtml = reader.Get(KeyFooterHtml);
-        _themeCss = reader.Get(KeyThemeCss);
-
-        if (_scope == "page")
+        if (forPage)
         {
-            var mergedReader = await helper.Merged();
+            var mergedReader = pageSettings.MergeWith(siteSettings);
             _loginMerge = mergedReader.Get(KeyLogin);
             _registerMerge = mergedReader.Get(KeyRegister);
             _footerHtmlMerge = mergedReader.Get(KeyFooterHtml);
@@ -184,14 +186,16 @@
         try
         {
             var forSite = _scope == "site";
-            var saver = new SettingsSaver(SettingService, forSite ? "Site" : "Page", forSite ? PageState.Site.SiteId : _pageId);
-            await saver.Save(new()
-            {
-                [KeyLogin] = _login,
-                [KeyRegister] = _register,
-                [KeyFooterHtml] = _footerHtml,
-                [KeyThemeCss] = _themeCss
-            });
+            await MySettings.Save(
+                forSite ? EntityNames.Site : EntityNames.Page,
+                forSite ? PageState.Site.SiteId : _pageId,
+                new()
+                {
+                    [KeyLogin] = _login,
+                    [KeyRegister] = _register,
+                    [KeyFooterHtml] = _footerHtml,
+                    [KeyThemeCss] = _themeCss
+                });
 
         }
         catch (Exception ex)

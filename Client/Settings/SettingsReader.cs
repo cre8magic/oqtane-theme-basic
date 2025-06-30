@@ -1,22 +1,25 @@
 ﻿using Oqtane.Services;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace ToSic.Cre8magic.Theme.Basic;
 
-internal class SettingsReader(ISettingService settingService, Dictionary<string, string> settings)
+internal class SettingsReader(ISettingService settingService, string entityName, int entityId, Dictionary<string, string> settings)
 {
+    public string EntityName => entityName;
+
+    public int EntityId => entityId;
+
     public Dictionary<string, string> Settings => settings;
 
     public string Get(string key, string defaultValue = "")
         => settingService.GetSetting(settings, Constants.KeyPrefix + key, defaultValue);
-}
 
-internal static class SettingsExtensions
-{
-    public static async Task<SettingsReader> GetReader(this ISettingService settingService, string entityName, int entityId)
+    public SettingsReader MergeWith(SettingsReader lowerPriorityReader)
     {
-        var settings = await settingService.GetSettingsAsync(entityName, entityId);
-        return new(settingService, settings);
+        // Clone the dictionaries, to not modify the original ones
+        var primary = new Dictionary<string, string>(Settings);
+        var secondary = new Dictionary<string, string>(lowerPriorityReader.Settings);
+        var mergedDic = settingService.MergeSettings(primary, secondary);
+        return new(settingService, entityName, entityId, mergedDic);
     }
 }
