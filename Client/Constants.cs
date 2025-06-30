@@ -7,10 +7,10 @@ class Constants
     /// </summary>
     internal static string KeyPrefix = typeof(Constants).Namespace!;
 
-    internal static string KeyLogin = KeyPrefix + ":Login";
-    internal static string KeyRegister = KeyPrefix + ":Register";
-    internal static string KeyFooterHtml = KeyPrefix + ":FooterHtml";
-    internal static string KeyThemeCss = KeyPrefix + ":ThemeCss";
+    internal static string KeyLogin = $"{KeyPrefix}:Login";
+    internal static string KeyRegister = $"{KeyPrefix}:Register";
+    internal static string KeyFooterHtml = $"{KeyPrefix}:FooterHtml";
+    internal static string KeyThemeCss = $"{KeyPrefix}:ThemeCss";
 
     public const string DefaultFooterHtml = """
                                                 <div class="container py-4 d-flex justify-content-md-between flex-column flex-md-row text-white">

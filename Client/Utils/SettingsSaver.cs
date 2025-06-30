@@ -14,20 +14,20 @@ namespace ToSic.Cre8magic.Theme.Basic;
 /// <param name="settingService">The settings service, should use dependency injection</param>
 internal class SettingsSaver(ISettingService settingService)
 {
-    public async Task Save(SettingsReader reader, Dictionary<string, string> values)
+    public async Task Save(SettingsReader reader, string prefix)
     {
-        var settings = reader.Settings;
+        Dictionary<string, string>? settings = new(reader.Settings);
 
         // Check for empty first, because we compare with the existing settings
         // to see if there was a value to remove in the first place.
-        var cleanUp = values
+        var cleanUp = reader.Settings
             .Where(kvp => string.IsNullOrEmpty(kvp.Value))
             .Select(kvp => kvp.Key)
             .Where(key => settings.ContainsKey(key))
             .ToList();
 
         // Clean list of things to update
-        foreach (var kvp in values)
+        foreach (var kvp in reader.Settings)
         {
             var key = kvp.Key;
             if (string.IsNullOrEmpty(kvp.Value))
