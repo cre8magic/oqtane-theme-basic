@@ -8,5 +8,9 @@ internal class SettingsEditor(ISettingService settingService, string entityName,
     : SettingsReader(settingService, entityName, entityId, settings)
 {
     public async Task Save()
-        => await new SettingsSaver(SettingService).Save(this, Settings);
+    {
+        if (SettingService == null)
+            throw new("SettingService is null, cannot save settings. Did you forget to pass it in the constructor?");
+        await new SettingsSaver(SettingService).Save(this, Settings);
+    }
 }

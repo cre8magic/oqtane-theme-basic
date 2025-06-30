@@ -10,7 +10,7 @@
 <div class="container">
     @* Choose Scope Site / Page - affects remaining fields *@
     <div class="row mb-1 align-items-center">
-        <Label Class="col-sm-3" For="scope" ResourceKey="Scope" ResourceType="@_resourceType" HelpText="Specify if the settings are applicable to this page or the entire site.">Setting Scope:</Label>
+        <Label Class="col-sm-3" For="scope" ResourceKey="Scope" ResourceType="@ThemeInfo.ThemeSettingsType" HelpText="Specify if the settings are applicable to this page or the entire site.">Setting Scope:</Label>
         <div class="col-sm-9">
             <select id="scope" class="form-select" value="@_scope" @onchange="ScopeChanged">
                 @if (UserSecurity.IsAuthorized(PageState.User, RoleNames.Admin))
@@ -25,7 +25,7 @@
     @* Enable Login *@
     <text>Exp!</text>
     <div class="row mb-1 align-items-center">
-        <Label Class="col-sm-3" For="login" ResourceKey="Login" ResourceType="@_resourceType" HelpText="Specify if a Login option should be displayed. Note that this option does not prevent the login page from being accessible via a direct url.">Show Login?</Label>
+        <Label Class="col-sm-3" For="login" ResourceKey="Login" ResourceType="@ThemeInfo.ThemeSettingsType" HelpText="Specify if a Login option should be displayed. Note that this option does not prevent the login page from being accessible via a direct url.">Show Login?</Label>
         <div class="col-sm-9">
             <select id="login" class="form-select" @bind="@_binders[KeyLogin].Value">
                 <option value="">&lt;@SharedLocalizer["Not Specified"]&gt;</option>
@@ -41,7 +41,7 @@
 
     @* Enable Register *@
     <div class="row mb-1 align-items-center">
-        <Label Class="col-sm-3" For="register" ResourceKey="Register" ResourceType="@_resourceType" HelpText="Specify if a Register option should be displayed. Note that this option is also dependent on the Allow Registration option in Site Settings.">Show Register?</Label>
+        <Label Class="col-sm-3" For="register" ResourceKey="Register" ResourceType="@ThemeInfo.ThemeSettingsType" HelpText="Specify if a Register option should be displayed. Note that this option is also dependent on the Allow Registration option in Site Settings.">Show Register?</Label>
         <div class="col-sm-9">
             <select id="register" class="form-select" @bind="@_binders[KeyRegister].Value">
                 <option value="">&lt;@SharedLocalizer["Not Specified"]&gt;</option>
@@ -67,7 +67,7 @@
                 <div class="accordion-body">
                     <div class="row mb-1 align-items-center">
                         <div class="col-sm-3">
-                            <Label For="footerHtml" ResourceKey="FooterHtml" ResourceType="@_resourceType" HelpText="Here you can insert your own HTML code for the footer">Footer HTML:</Label>
+                            <Label For="footerHtml" ResourceKey="FooterHtml" ResourceType="@ThemeInfo.ThemeSettingsType" HelpText="Here you can insert your own HTML code for the footer">Footer HTML:</Label>
                             <button type="button" class="btn btn-secondary ms-2" @onclick="() => _binders[KeyFooterHtml].Value = DefaultFooterHtml">
                                 @SharedLocalizer["Show Default"]
                             </button>
@@ -99,7 +99,7 @@
             <div id="collapseThemeColor" class="accordion-collapse collapse" aria-labelledby="headingThemeColor" data-bs-parent="#themeColorAccordion">
                 <div class="accordion-body">
                     <div class="row mb-1 align-items-center">
-                        <Label class="col-sm-3" For="themeCss" ResourceKey="ThemeCss" ResourceType="@_resourceType" HelpText="Here you can insert your own Theme CSS.">Theme Color:</Label>
+                        <Label class="col-sm-3" For="themeCss" ResourceKey="ThemeCss" ResourceType="@ThemeInfo.ThemeSettingsType" HelpText="Here you can insert your own Theme CSS.">Theme Color:</Label>
                         <div class="col-sm-9">
                             <textarea id="themeCss" class="form-control" @bind="_binders[KeyThemeCss].Value" rows="2"></textarea>
                             @if (_scopeIsPage)
@@ -120,11 +120,16 @@
 
 @code {
     private int _pageId = -1;
-    private readonly string _resourceType = ThemeInfo.Static.ThemeSettingsType;
     private string _scope = "page";
     private bool _scopeIsPage = true;
+
+    // Current settings which are being edited - either site or page settings
     private SettingsEditor? _current;
+
+    // Site settings, used to show defaults for page settings
     private SettingsReader? _siteSettings;
+
+    // Binders for the settings fields, allowing for easy data binding
     private readonly SettingBinderManager _binders = new();
 
 
@@ -153,7 +158,6 @@
         _binders.SetEditor(_current);
         _siteSettings = siteSettings;
 
-        // StateHasChanged();
         await Task.Yield();
     }
 
@@ -168,8 +172,8 @@
         }
         catch (Exception ex)
         {
-            await logger.LogError(ex, "Error Loading Settings {Error}", ex.Message);
-            AddModuleMessage("Error Loading Settings", MessageType.Error);
+            await logger.LogError(ex, "Error Scope Changed {Error}", ex.Message);
+            AddModuleMessage("Error Scope Changed", MessageType.Error);
         }
     }
 

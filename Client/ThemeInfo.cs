@@ -5,6 +5,12 @@ namespace ToSic.Cre8magic.Theme.Basic;
 
 public class ThemeInfo : ITheme
 {
+    public const string ThemeSettingsType =
+        "ToSic.Cre8magic.Theme.Basic.ThemeSettings, ToSic.Cre8magic.Theme.Basic.Client.Oqtane";
+
+    public const string ContainerSettingsType =
+        "ToSic.Cre8magic.Theme.Basic.ContainerSettings, ToSic.Cre8magic.Theme.Basic.Client.Oqtane";
+
     public Oqtane.Models.Theme Theme => Static;
 
     public static Oqtane.Models.Theme Static => new()
@@ -12,8 +18,8 @@ public class ThemeInfo : ITheme
         Name = "Cre8magic Basic",
         Version = "1.0.0",
         PackageName = "ToSic.Cre8magic.Theme.Basic",
-        ThemeSettingsType = "ToSic.Cre8magic.Theme.Basic.ThemeSettings, ToSic.Cre8magic.Theme.Basic.Client.Oqtane",
-        ContainerSettingsType = "ToSic.Cre8magic.Theme.Basic.ContainerSettings, ToSic.Cre8magic.Theme.Basic.Client.Oqtane",
+        ThemeSettingsType = ThemeSettingsType,
+        ContainerSettingsType = ContainerSettingsType,
         Resources =
         [
             new Stylesheet("~/Theme.css"),

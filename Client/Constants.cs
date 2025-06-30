@@ -5,7 +5,7 @@ class Constants
     /// <summary>
     /// Prefix used for all keys/settings in this theme.
     /// </summary>
-    internal static string KeyPrefix = typeof(Constants).Namespace;
+    internal static string KeyPrefix = typeof(Constants).Namespace!;
 
     internal const string KeyLogin = ":Login";
     internal const string KeyRegister = ":Register";

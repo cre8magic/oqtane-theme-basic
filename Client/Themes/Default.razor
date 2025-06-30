@@ -1,7 +1,7 @@
 @namespace ToSic.Cre8magic.Theme.Basic
 @using static ToSic.Cre8magic.Theme.Basic.Constants
 @inherits ThemeBase
-@inject ISettingService SettingService
+@inject MySettings MySettings
 
 @code {
     public override string Name => "Default";
@@ -11,20 +11,13 @@
     [Parameter]
     public string Variant { get; set; } = "default";
 
-    private bool _login = true;
-    private bool _register = true;
-    private string _footerHtml = "";
-    private string _themeCss = "";
+    private SettingsReader _settings = new();
 
     protected override void OnParametersSet()
     {
         try
         {
-            var settings = SettingService.MergeSettings(PageState.Site.Settings, PageState.Page.Settings);
-            _login = bool.Parse(SettingService.GetSetting(settings, GetType().Namespace + KeyLogin, "true"));
-            _register = bool.Parse(SettingService.GetSetting(settings, GetType().Namespace + KeyRegister, "true"));
-            _footerHtml = SettingService.GetSetting(settings, GetType().Namespace + KeyFooterHtml, "");
-            _themeCss = SettingService.GetSetting(settings, GetType().Namespace + KeyThemeCss, "");
+            _settings = MySettings.GetPage(PageState);
         }
         catch
         {
@@ -33,9 +26,9 @@
     }
 }
 
-@if (!string.IsNullOrWhiteSpace(_themeCss)) {
+@if (_settings.TryGet(KeyThemeCss, out var themeCss)) {
     <style>
-        @((MarkupString)_themeCss)
+        @((MarkupString)themeCss)
     </style>
 }
 
@@ -45,8 +38,8 @@
         <Logo /><Menu Orientation="Horizontal" />
         <div class="controls ms-auto">
             <div class="controls-group">
-                <UserProfile ShowRegister="@_register" />
-                <Login ShowLogin="@_login"  />
+                <UserProfile ShowRegister="@_settings.Bool(KeyRegister, true)" />
+                <Login ShowLogin="@_settings.Bool(KeyLogin, true))"  />
                 <ControlPanel ButtonClass="btn-outline-light" />
             </div>
         </div>
@@ -61,14 +54,7 @@
     </main>
 
     <footer id="theme-page-footer" class="footer">
-        @if (!string.IsNullOrWhiteSpace(_footerHtml))
-        {
-            @((MarkupString)_footerHtml)
-        }
-        else
-        {
-            @((MarkupString)Basic.Constants.DefaultFooterHtml)
-        }
+        @((MarkupString)_settings.Get(KeyFooterHtml, DefaultFooterHtml))
     </footer>
 
 </div>
