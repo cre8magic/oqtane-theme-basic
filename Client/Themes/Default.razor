@@ -1,4 +1,5 @@
 @namespace ToSic.Cre8magic.Theme.Basic
+@using ToSic.Cre8magic.Theme.Basic.Utils
 @using static ToSic.Cre8magic.Theme.Basic.Constants
 @inherits ThemeBase
 @inject MySettings MySettings
@@ -15,17 +16,11 @@
 
     protected override void OnParametersSet()
     {
-        try
-        {
-            _settings = MySettings.GetPage(PageState);
-        }
-        catch
-        {
-            // error loading theme settings
-        }
+        RazorUtils.RunAndIgnoreErrors(() => _settings = MySettings.GetPage(PageState));
     }
 }
 
+@* Add custom Css rules if provided in the page/site settings *@
 @if (_settings.TryGet(KeyThemeCss, out var themeCss)) {
     <style>
         @((MarkupString)themeCss)
@@ -39,7 +34,7 @@
         <div class="controls ms-auto">
             <div class="controls-group">
                 <UserProfile ShowRegister="@_settings.Bool(KeyRegister, true)" />
-                <Login ShowLogin="@_settings.Bool(KeyLogin, true))"  />
+                <Login ShowLogin="@_settings.Bool(KeyLogin, true)"  />
                 <ControlPanel ButtonClass="btn-outline-light" />
             </div>
         </div>

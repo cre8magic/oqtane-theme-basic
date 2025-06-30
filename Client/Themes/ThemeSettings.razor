@@ -1,11 +1,73 @@
 @namespace ToSic.Cre8magic.Theme.Basic
 @inherits ModuleBase
 @implements Oqtane.Interfaces.ISettingsControl
+@using ToSic.Cre8magic.Theme.Basic.Utils
 @using static ToSic.Cre8magic.Theme.Basic.Constants
 @inject MySettings MySettings
 @inject IStringLocalizer<ThemeSettings> Localizer
 @inject IStringLocalizer<SharedResources> SharedLocalizer
 @attribute [OqtaneIgnore]
+
+@code {
+    /// <summary>PageId - will be set on Init</summary>
+    private int _pageId = -1;
+
+    /// <summary>Scope we're currently editing - either "site" or "page" - is set in a drop-down</summary>
+    private string _scope = "page";
+    private bool _scopeIsPage = true;
+
+    /// <summary>Current settings which are being edited - either site or page settings</summary>
+    private SettingsEditor? _current;
+
+    /// <summary>Site settings, used to show defaults for page settings</summary>
+    private SettingsReader? _siteSettings;
+
+    /// <summary>Binders for the settings fields, allowing for easy data binding</summary>
+    private readonly SettingBinderManager _binders = new();
+
+    /// <summary>Initializer / On-Load</summary>
+    protected override async Task OnInitializedAsync()
+    {
+        if (PageState.QueryString.TryGetValue("id", out var idString))
+            _pageId = int.Parse(idString);
+
+        await LoadSettings();
+    }
+
+    /// <summary>
+    /// Load the settings based on the current scope (site or page)
+    /// </summary>
+    private async Task LoadSettings()
+        => await RazorUtils.RunAsyncAndLogErrors(async () =>
+        {
+            var siteSettings = await MySettings.EditSite(PageState.Site.SiteId);
+            var pageSettings = await MySettings.EditPage(_pageId);
+
+            _current = _scopeIsPage ? pageSettings : siteSettings;
+            _binders.SetEditor(_current);
+            _siteSettings = siteSettings;
+
+            await Task.Yield();
+        }, this, logger);
+
+    /// <summary>
+    /// Handle scope change event to update UI to site or page settings
+    /// </summary>
+    private async Task ScopeChanged(ChangeEventArgs eventArgs)
+        => await RazorUtils.RunAsyncAndLogErrors(async () =>
+        {
+            _scope = (string)eventArgs.Value!;
+            _scopeIsPage = _scope == "page";
+            await LoadSettings();
+            StateHasChanged();
+        }, this, logger);
+
+    /// <summary>
+    /// Handle the save action for the settings. Will be called by the Oqtane framework.
+    /// </summary>
+    public async Task UpdateSettings()
+        => await RazorUtils.RunAsyncAndLogErrors(() => _current!.Save(), this, logger);
+}
 
 <div class="container">
     @* Choose Scope Site / Page - affects remaining fields *@
@@ -118,75 +180,3 @@
 
 </div>
 
-@code {
-    private int _pageId = -1;
-    private string _scope = "page";
-    private bool _scopeIsPage = true;
-
-    // Current settings which are being edited - either site or page settings
-    private SettingsEditor? _current;
-
-    // Site settings, used to show defaults for page settings
-    private SettingsReader? _siteSettings;
-
-    // Binders for the settings fields, allowing for easy data binding
-    private readonly SettingBinderManager _binders = new();
-
-
-    protected override async Task OnInitializedAsync()
-    {
-        if (PageState.QueryString.TryGetValue("id", out var idString))
-            _pageId = int.Parse(idString);
-
-        try
-        {
-            await LoadSettings();
-        }
-        catch (Exception ex)
-        {
-            await logger.LogError(ex, "Error Loading Settings {Error}", ex.Message);
-            AddModuleMessage("Error Loading Settings", MessageType.Error);
-        }
-    }
-
-    private async Task LoadSettings()
-    {
-        var siteSettings = await MySettings.EditSite(PageState.Site.SiteId);
-        var pageSettings = await MySettings.EditPage(_pageId);
-
-        _current = _scopeIsPage ? pageSettings : siteSettings;
-        _binders.SetEditor(_current);
-        _siteSettings = siteSettings;
-
-        await Task.Yield();
-    }
-
-    private async Task ScopeChanged(ChangeEventArgs eventArgs)
-    {
-        try
-        {
-            _scope = (string)eventArgs.Value!;
-            _scopeIsPage = _scope == "page";
-            await LoadSettings();
-            StateHasChanged();
-        }
-        catch (Exception ex)
-        {
-            await logger.LogError(ex, "Error Scope Changed {Error}", ex.Message);
-            AddModuleMessage("Error Scope Changed", MessageType.Error);
-        }
-    }
-
-    public async Task UpdateSettings()
-    {
-        try
-        {
-            await _current!.Save();
-        }
-        catch (Exception ex)
-        {
-            await logger.LogError(ex, "Error Saving Settings {Error}", ex.Message);
-            AddModuleMessage("Error Saving Settings", MessageType.Error);
-        }
-    }
-}
