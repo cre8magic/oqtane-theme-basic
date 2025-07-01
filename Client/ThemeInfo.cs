@@ -24,17 +24,27 @@ public class ThemeInfo : ITheme
         ]
     };
 
+    #region Settings Type Names for Oqtane to Auto-Inject in the Theme/Module Settings Dialogs
+
+    /// <summary>
+    /// The assembly name, used to construct the full type names for settings.
+    /// </summary>
+    /// <remarks>
+    /// The assembly name should not provide version etc. because it will be stored in the database, and future updates would result in a mismatch.
+    /// </remarks>
+    private static readonly string AssemblyName = typeof(ContainerSettings).Assembly.GetName().Name!;
+
     /// <summary>
     /// The Theme Settings Type will let Oqtane know what control to show in the page settings, and it will also be used to load language resources.
     /// </summary>
-    public const string ThemeSettingsType =
-        "ToSic.Cre8magic.Theme.Basic.ThemeSettings, ToSic.Cre8magic.Theme.Basic.Client.Oqtane";
+    private static readonly string ThemeSettingsType = $"{typeof(ThemeSettings).FullName}, {AssemblyName}";
 
     /// <summary>
     /// The Container Settings Type will let Oqtane know what control to show in the module settings, and it will also be used to load language resources.
     /// </summary>
-    public const string ContainerSettingsType =
-        "ToSic.Cre8magic.Theme.Basic.ContainerSettings, ToSic.Cre8magic.Theme.Basic.Client.Oqtane";
+    private static readonly string ContainerSettingsType = $"{typeof(ContainerSettings).FullName}, {AssemblyName}";
+
+    #endregion
 
     /// <summary>
     /// Prefix used for all keys/settings in this theme.
