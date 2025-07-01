@@ -6,18 +6,6 @@ namespace ToSic.Cre8magic.Theme.Basic;
 public class ThemeInfo : ITheme
 {
     /// <summary>
-    /// The Theme Settings Type will let Oqtane know what control to show in the page settings, and it will also be used to load language resources.
-    /// </summary>
-    public const string ThemeSettingsType =
-        "ToSic.Cre8magic.Theme.Basic.ThemeSettings, ToSic.Cre8magic.Theme.Basic.Client.Oqtane";
-
-    /// <summary>
-    /// The Container Settings Type will let Oqtane know what control to show in the module settings, and it will also be used to load language resources.
-    /// </summary>
-    public const string ContainerSettingsType =
-        "ToSic.Cre8magic.Theme.Basic.ContainerSettings, ToSic.Cre8magic.Theme.Basic.Client.Oqtane";
-
-    /// <summary>
     /// The Theme will let Oqtane know what theme this is, and how it should be loaded / rendered etc.
     /// </summary>
     public Oqtane.Models.Theme Theme => new()
@@ -37,9 +25,21 @@ public class ThemeInfo : ITheme
     };
 
     /// <summary>
+    /// The Theme Settings Type will let Oqtane know what control to show in the page settings, and it will also be used to load language resources.
+    /// </summary>
+    public const string ThemeSettingsType =
+        "ToSic.Cre8magic.Theme.Basic.ThemeSettings, ToSic.Cre8magic.Theme.Basic.Client.Oqtane";
+
+    /// <summary>
+    /// The Container Settings Type will let Oqtane know what control to show in the module settings, and it will also be used to load language resources.
+    /// </summary>
+    public const string ContainerSettingsType =
+        "ToSic.Cre8magic.Theme.Basic.ContainerSettings, ToSic.Cre8magic.Theme.Basic.Client.Oqtane";
+
+    /// <summary>
     /// Prefix used for all keys/settings in this theme.
     /// </summary>
-    internal static string KeyPrefix = typeof(ThemeConstants).Namespace!;
+    internal static string KeyPrefix = typeof(ThemeInfo).Namespace!;
 
     internal static string KeyLogin = $"{KeyPrefix}:Login";
     internal static string KeyRegister = $"{KeyPrefix}:Register";

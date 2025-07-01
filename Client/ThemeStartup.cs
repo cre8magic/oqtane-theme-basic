@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ToSic.Cre8magic.Theme.Basic.Settings;
 
 namespace ToSic.Cre8magic.Theme.Basic;
 

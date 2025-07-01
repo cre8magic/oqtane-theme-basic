@@ -4,7 +4,7 @@ using Oqtane.Services;
 using Oqtane.Shared;
 using Oqtane.UI;
 
-namespace ToSic.Cre8magic.Theme.Basic.Settings;
+namespace ToSic.Cre8magic.Theme.Basic.Utils.Settings;
 
 internal class OqtaneSettings(ISettingService settingService)
 {

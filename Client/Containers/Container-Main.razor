@@ -1,6 +1,4 @@
 @namespace ToSic.Cre8magic.Theme.Basic
-@using System.Diagnostics.CodeAnalysis
-@using ToSic.Cre8magic.Theme.Basic.Settings
 @inherits ContainerBase
 @inject OqtaneSettings OqtaneSettings
 @*
@@ -20,7 +18,7 @@
     /// <summary>
     /// If we should show the title above the module; initialized in OnParametersSet; default is `false`.
     /// </summary>
-    private bool ShowTitle => Settings.Bool(ThemeInfo.KeyShowTitle, false) && !string.IsNullOrEmpty(ModuleState.Title);
+    private bool ShowTitle => Settings.Bool(KeyShowTitle, false) && !string.IsNullOrEmpty(ModuleState.Title);
 }
 
 <div class="container py-4">

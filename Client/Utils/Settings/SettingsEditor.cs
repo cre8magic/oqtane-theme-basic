@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace ToSic.Cre8magic.Theme.Basic.Settings;
+namespace ToSic.Cre8magic.Theme.Basic.Utils.Settings;
 
 internal class SettingsEditor
 {

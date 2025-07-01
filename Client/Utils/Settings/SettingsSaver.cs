@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Oqtane.Services;
 
-namespace ToSic.Cre8magic.Theme.Basic.Settings;
+namespace ToSic.Cre8magic.Theme.Basic.Utils.Settings;
 
 /// <summary>
 /// Tool to help save settings for anything.

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ToSic.Cre8magic.Theme.Basic.Settings;
+namespace ToSic.Cre8magic.Theme.Basic.Utils.Settings;
 
 /// <summary>
 /// Helper to bind a value from a settings dictionary to Razor code.
