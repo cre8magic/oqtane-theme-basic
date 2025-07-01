@@ -79,14 +79,14 @@
     <div class="row mb-1 align-items-center">
         <Label Class="col-sm-3" For="login" ResourceKey="Login" ResourceType="@ThemeSettingsType" HelpText="Specify if a Login option should be displayed. Note that this option does not prevent the login page from being accessible via a direct url.">Show Login?</Label>
         <div class="col-sm-9">
-            <select id="login" class="form-select" @bind="@_editor[KeyLogin].Value">
+            <select id="login" class="form-select" @bind="@_editor[MyThemeSettings.KeyLogin].Value">
                 <option value="">&lt;@SharedLocalizer["Not Specified"]&gt;</option>
                 <option value="true">@SharedLocalizer["Yes"]</option>
                 <option value="false">@SharedLocalizer["No"]</option>
             </select>
-            @if (_editor.ShowFallback(KeyLogin))
+            @if (_editor.ShowFallback(MyThemeSettings.KeyLogin))
             {
-                <div class="small text-muted">Site Default (if not set): @_editor.Fallback.Get(KeyLogin)</div>
+                <div class="small text-muted">Site Default (if not set): @_editor.Fallback.Get(MyThemeSettings.KeyLogin)</div>
             }
         </div>
     </div>
@@ -95,14 +95,14 @@
     <div class="row mb-1 align-items-center">
         <Label Class="col-sm-3" For="register" ResourceKey="Register" ResourceType="@ThemeSettingsType" HelpText="Specify if a Register option should be displayed. Note that this option is also dependent on the Allow Registration option in Site Settings.">Show Register?</Label>
         <div class="col-sm-9">
-            <select id="register" class="form-select" @bind="@_editor[KeyRegister].Value">
+            <select id="register" class="form-select" @bind="@_editor[MyThemeSettings.KeyRegister].Value">
                 <option value="">&lt;@SharedLocalizer["Not Specified"]&gt;</option>
                 <option value="true">@SharedLocalizer["Yes"]</option>
                 <option value="false">@SharedLocalizer["No"]</option>
             </select>
-            @if (_editor.ShowFallback(KeyRegister))
+            @if (_editor.ShowFallback(MyThemeSettings.KeyRegister))
             {
-                <div class="small text-muted">Site Default (if not set): @_editor.Fallback.Get(KeyRegister)</div>
+                <div class="small text-muted">Site Default (if not set): @_editor.Fallback.Get(MyThemeSettings.KeyRegister)</div>
             }
         </div>
     </div>
@@ -120,17 +120,17 @@
                     <div class="row mb-1 align-items-center">
                         <div class="col-sm-3">
                             <Label For="footerHtml" ResourceKey="FooterHtml" ResourceType="@ThemeSettingsType" HelpText="Here you can insert your own HTML code for the footer">Footer HTML:</Label>
-                            <button type="button" class="btn btn-secondary ms-2" @onclick="() => _editor[KeyFooterHtml].Value = DefaultFooterHtml">
+                            <button type="button" class="btn btn-secondary ms-2" @onclick="() => _editor[MyThemeSettings.KeyFooterHtml].Value = DefaultFooterHtml">
                                 @SharedLocalizer["Show Default"]
                             </button>
                         </div>
                         <div class="col-sm-9">
-                            <textarea id="footerHtml" class="form-control" @bind="@_editor[KeyFooterHtml].Value" rows="4"></textarea>
-                            @if (_editor.ShowFallback(KeyFooterHtml))
+                            <textarea id="footerHtml" class="form-control" @bind="@_editor[MyThemeSettings.KeyFooterHtml].Value" rows="4"></textarea>
+                            @if (_editor.ShowFallback(MyThemeSettings.KeyFooterHtml))
                             {
                                 <div class="small text-muted">
                                     Site Default (if not set): <br />
-                                    <pre>@_editor.Fallback.Get(KeyFooterHtml)</pre>
+                                    <pre>@_editor.Fallback.Get(MyThemeSettings.KeyFooterHtml)</pre>
                                 </div>
                             }
                         </div>
@@ -153,12 +153,12 @@
                     <div class="row mb-1 align-items-center">
                         <Label class="col-sm-3" For="themeCss" ResourceKey="ThemeCss" ResourceType="@ThemeSettingsType" HelpText="Here you can insert your own Theme CSS.">Theme Color:</Label>
                         <div class="col-sm-9">
-                            <textarea id="themeCss" class="form-control" @bind="_editor[KeyThemeCss].Value" rows="2"></textarea>
-                            @if (_editor.ShowFallback(KeyThemeCss))
+                            <textarea id="themeCss" class="form-control" @bind="_editor[MyThemeSettings.KeyThemeCss].Value" rows="2"></textarea>
+                            @if (_editor.ShowFallback(MyThemeSettings.KeyThemeCss))
                             {
                                 <div class="small text-muted">
                                     Site Default (if not set): <br />
-                                    <pre>@_editor.Fallback.Get(KeyThemeCss)</pre>
+                                    <pre>@_editor.Fallback.Get(MyThemeSettings.KeyThemeCss)</pre>
                                 </div>
                             }
                         </div>

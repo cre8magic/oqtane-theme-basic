@@ -37,12 +37,12 @@ public class ThemeInfo : ITheme
     /// <summary>
     /// The Theme Settings Type will let Oqtane know what control to show in the page settings, and it will also be used to load language resources.
     /// </summary>
-    private static readonly string ThemeSettingsType = $"{typeof(ThemeSettings).FullName}, {AssemblyName}";
+    public static readonly string ThemeSettingsType = $"{typeof(ThemeSettings).FullName}, {AssemblyName}";
 
     /// <summary>
     /// The Container Settings Type will let Oqtane know what control to show in the module settings, and it will also be used to load language resources.
     /// </summary>
-    private static readonly string ContainerSettingsType = $"{typeof(ContainerSettings).FullName}, {AssemblyName}";
+    public static readonly string ContainerSettingsType = $"{typeof(ContainerSettings).FullName}, {AssemblyName}";
 
     #endregion
 
@@ -50,13 +50,6 @@ public class ThemeInfo : ITheme
     /// Prefix used for all keys/settings in this theme.
     /// </summary>
     internal static string KeyPrefix = typeof(ThemeInfo).Namespace!;
-
-    internal static string KeyLogin = $"{KeyPrefix}:Login";
-    internal static string KeyRegister = $"{KeyPrefix}:Register";
-    internal static string KeyFooterHtml = $"{KeyPrefix}:FooterHtml";
-    internal static string KeyThemeCss = $"{KeyPrefix}:ThemeCss";
-
-    internal static string KeyShowTitle = $"{KeyPrefix}:ShowTitle";
 
 
     public const string DefaultFooterHtml = """
@@ -85,6 +78,7 @@ public class ThemeInfo : ITheme
                                                 </div>
                                             """;
 
+    // TODO: @2dg - make same solution with button to add this in settings
     public const string DefaultThemeCss = """
                                           :root,
                                           [data-bs-theme='default-theme'] {
@@ -226,4 +220,5 @@ public class ThemeInfo : ITheme
                                             }
                                           }
                                           """;
+
 }

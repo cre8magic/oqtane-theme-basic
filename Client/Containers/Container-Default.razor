@@ -13,12 +13,12 @@
     public override string Name => "Default Container";
 
     [field: AllowNull, MaybeNull]
-    private SettingsReader Settings => field ??= OqtaneSettings.GetModule(ModuleState);
+    private MyContainerSettings Settings => field ??= new(OqtaneSettings.GetModule(ModuleState));
 
     /// <summary>
     /// If we should show the title above the module; initialized in OnParametersSet; default is `false`.
     /// </summary>
-    private bool ShowTitle => Settings.Bool(KeyShowTitle, false) && !string.IsNullOrEmpty(ModuleState.Title);
+    private bool ShowTitle => Settings.ShowTitle && !string.IsNullOrEmpty(ModuleState.Title);
 }
 
 <div class="container py-4">

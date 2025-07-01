@@ -13,14 +13,14 @@
 
     public override string Panes => PaneNames.Default + ",Header";
 
-    private SettingsReader _settings = new();
+    private MyThemeSettings Settings { get; set; } = null!;
 
     protected override void OnParametersSet()
-        => RazorUtils.RunAndIgnoreErrors(() => _settings = OqtaneSettings.GetPage(PageState));
+        => RazorUtils.RunAndIgnoreErrors(() => Settings = new(OqtaneSettings.GetPage(PageState)));
 }
 
 @* Add custom Css rules if provided in the page/site settings *@
-@if (_settings.TryGet(KeyThemeCss, out var themeCss)) {
+@if (Settings.TryGetThemeCss(out var themeCss)) {
     <style>
         @((MarkupString)themeCss)
     </style>
@@ -32,8 +32,8 @@
         <Logo /><Menu Orientation="Horizontal" />
         <div class="controls ms-auto">
             <div class="controls-group">
-                <UserProfile ShowRegister="@_settings.Bool(KeyRegister, true)" />
-                <Login ShowLogin="@_settings.Bool(KeyLogin, true)"  />
+                <UserProfile ShowRegister="@Settings.ShowRegister" />
+                <Login ShowLogin="@Settings.ShowLogin"  />
                 <ControlPanel ButtonClass="btn-outline-light" />
             </div>
         </div>
@@ -48,7 +48,7 @@
     </main>
 
     <footer id="theme-page-footer" class="footer">
-        @((MarkupString)_settings.Get(KeyFooterHtml, DefaultFooterHtml))
+        @((MarkupString)Settings.FooterHtml)
     </footer>
 
 </div>
