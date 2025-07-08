@@ -1,0 +1,143 @@
+{
+  // Experimental idea... ask 2dm
+  "messages": {
+    "before": "This will convert the cre8magic Oqtane Basic Theme to template for custom themes.\n\n To learn more about the Basic Theme, visit http://go.cre8magic.org/theme-basic"
+  },
+  // Experimental idea... ask 2dm
+  "parameters": {
+    // The owner of the template, used in the namespace and folder structure.
+    "Owner": {
+      "type": "string",
+      "default": "[Owner]"
+    },
+    "ThemeName": {
+      "type": "string",
+      "default": "[Theme]"
+    },
+    "FrameworkVersion": {
+      "type": "string",
+      "default": "[FrameworkVersion]"
+    }
+  },
+  // The path where generated templates will be placed.
+  // Could be absolute "c:\\Projects\\oqtane.framework\\Oqtane.Server\\wwwroot\\Themes\\Templates\\YourTemplate"
+  // or relative to the current working directory.
+  // Take a care to stop Oqtane before generating with in Oqtane.Server folders.
+  "destinationPath": "..\\..\\2Templates\\cre8magic",
+  // Source file selection rules
+  // We have 3 set of rules for demonstration. In practice you can have just one.
+  "source": [
+    {
+      // 1st rule: Include all files
+      "include": [
+        "**/*.*"
+      ],
+      // Exclude version control, IDE, and specific folders/files
+      "exclude": [
+        ".git/",
+        ".github/",
+        ".vs/",
+        "Client/",
+        "Package/",
+        ".gitignore",
+        "**/*.DotSettings",
+        "cre8magic-transformer.config.json"
+      ]
+    },
+    {
+      // 2nd rule: Include all files in the Client folder
+      "include": [
+        "Client/**/*.*"
+      ],
+      // Exclude build artifacts and settings
+      "exclude": [
+        "**/bin/",
+        "**/node_modules/",
+        "**/obj/",
+        "**/package-lock.json",
+        "**/*.DotSettings"
+      ]
+    },
+    {
+      // 3rd rule: Include all files in the Package folder
+      "include": [
+        "Package/**/*.*"
+      ],
+      // Exclude build artifacts and package files
+      "exclude": [
+        "**/bin/",
+        "**/obj/",
+        "**/*.nupkg"
+      ]
+    }
+  ],
+  // Folder and file renaming rules
+  "rename": [
+    {
+      // Apply to all files and folders
+      "include": [
+        "**/*.*"
+      ],
+      // Replace namespace and theme placeholders
+      "replace": {
+        "ToSic.Cre8magic.Theme.Basic": "[Owner].Theme.[Theme]"
+      }
+    }
+  ],
+  // Content processing and token replacement rules
+  "process": [
+    {
+      // File types with text content to process for replacements.
+      // Everything else (images, binaries) will be just copied as is.
+      "include": [
+        "**/*.sln",
+        "**/*.csproj",
+        "**/*.cs",
+        "**/*.cshtml",
+        "**/*.razor",
+        "**/*.resx",
+        "**/*.config",
+        "**/*.xml",
+        "**/*.json",
+        "**/*.js",
+        "**/*.map",
+        "**/*.ts",
+        "**/*.css",
+        "**/*.sass",
+        "**/*.scss",
+        "**/*.html",
+        "**/*.md",
+        "**/*.txt",
+        "**/*.nuspec",
+        "**/*.bat",
+        "**/*.cmd",
+        "**/*.ps1",
+        "**/*.sh"
+      ],
+      // Exclude specific files from replacement.
+      // This is useful for files that should not be modified, like readme files.
+      "exclude": [
+        "**/styles/readme.md",
+        "template.json"
+      ],
+      // Replace tokens with template variables.
+      "replace": {
+        "ToSic.Cre8magic.Theme.Basic": "[Owner].Theme.[Theme]",
+        "ToSic": "[Owner]",
+        "Basic": "[Theme]",
+        "6.1.3": "[FrameworkVersion]"
+      }
+    },
+    {
+      // File types with text content to process for replacements.
+      // Everything else (images, binaries) will be just copied as is.
+      "include": [
+        "template.json"
+      ],
+      // Replace tokens with template variables.
+      "replace": {
+        "ToSic.Cre8magic.Theme.Basic": "[Owner].Theme.[Theme]"
+      }
+    }
+  ]
+}

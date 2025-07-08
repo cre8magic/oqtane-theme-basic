@@ -21,7 +21,7 @@
         "Package/",
         ".gitignore",
         "**/*.DotSettings",
-        "template-generator.config.json"
+        "cre8magic-transformer.config.json"
       ]
     },
     {

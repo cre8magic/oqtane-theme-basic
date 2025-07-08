@@ -10,9 +10,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToSic.Cre8magic.Theme.Basic
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{089100B1-113F-4E66-888A-E83F3999EAFD}"
 	ProjectSection(SolutionItems) = preProject
+		cre8magic-experimental.config.json = cre8magic-experimental.config.json
 		LICENSE.md = LICENSE.md
+		cre8magic-transformer.config.json = cre8magic-transformer.config.json
 		readme.md = readme.md
-		template-generator.config.json = template-generator.config.json
 		template.json = template.json
 	EndProjectSection
 EndProject
