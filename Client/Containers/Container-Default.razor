@@ -19,10 +19,16 @@
     /// If we should show the title above the module; initialized in OnParametersSet; default is `false`.
     /// </summary>
     private bool ShowTitle => Settings.ShowTitle && !string.IsNullOrEmpty(ModuleState.Title);
+
+    private bool IsHeader => ModuleState.Pane.ToLowerInvariant() == "header";
+
+    private string ContainerClass => IsHeader
+       ? "container-header"
+       : "container-default";
 }
 
-<div class="container py-4">
-    @if (ShowTitle)
+<div class="@ContainerClass">
+    @if (ShowTitle && !IsHeader)
     {
         <div class="row px-4">
             <div class="d-flex flex-nowrap">
