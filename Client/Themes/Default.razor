@@ -22,7 +22,7 @@
 @* Add custom Css rules if provided in the page/site settings *@
 @if (Settings.TryGetThemeCss(out var themeCss)) {
     <style>
-        @((MarkupString)themeCss)
+        @((MarkupString)themeCss);
     </style>
 }
 
