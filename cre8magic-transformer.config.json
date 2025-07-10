@@ -3,7 +3,7 @@
   // Could be absolute "c:\\Projects\\oqtane.framework\\Oqtane.Server\\wwwroot\\Themes\\Templates\\YourTemplate"
   // or relative to the current working directory.
   // Take a care to stop Oqtane before generating with in Oqtane.Server folders.
-  "destinationPath": "..\\..\\2Templates\\cre8magic",
+  "destinationPath": "..\\oqtane-theme-templates\\Client\\wwwroot\\Themes\\Templates\\cre8magic-basic",
   // Source file selection rules
   // We have 3 set of rules for demonstration. In practice you can have just one.
   "source": [
