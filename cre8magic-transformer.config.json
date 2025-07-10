@@ -21,7 +21,7 @@
         "Package/",
         ".gitignore",
         "**/*.DotSettings",
-        "cre8magic-transformer.config.json"
+        "cre8magic-*.config.json"
       ]
     },
     {
@@ -89,6 +89,7 @@
         "**/*.md",
         "**/*.txt",
         "**/*.nuspec",
+        "**/*.nuspectemplate",
         "**/*.bat",
         "**/*.cmd",
         "**/*.ps1",
