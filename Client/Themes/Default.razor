@@ -11,7 +11,7 @@
 
     public override string Name => "Default";
 
-    public override string Panes => PaneNames.Default + ",Header";
+    public override string Panes => PaneNames.Default + ",Header"; // Add for Dropdown Menu
 
     private MyThemeSettings Settings { get; set; } = null!;
 
@@ -40,11 +40,11 @@
     </nav>
 
     <div id="theme-page-header-pane" class="container-xxl px-0">
-        <Pane Name="Header" />
+        <Pane Name="Header" />  @* Default pane for main content *@
     </div>
 
     <main role="main" id="theme-page-main">
-        <Pane Name="@PaneNames.Default" />
+        <Pane Name="@PaneNames.Default" /> @* Default pane for main content *@
     </main>
 
     <footer id="theme-page-footer" class="footer">
