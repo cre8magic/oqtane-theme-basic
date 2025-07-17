@@ -73,3 +73,77 @@
 @import "components/layout-default";
 @import "components/layout-fullscreen";
 @import "components/container";
+
+
+
+
+
+// Add to a new File (Error)
+// Menu Classes
+
+
+.dropdown:hover .dropdown-menu {
+    display: block !important;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    color: var(--bs-primary) !important;
+    background-color: transparent;
+}
+
+
+/* Hover Dropdown - Nur CSS */
+.dropdown:hover .dropdown-menu {
+    display: block !important;
+    margin-top: 0;
+}
+
+.dropdown .dropdown-menu {
+    transition: all 0.2s ease-in-out;
+    margin-top: 0;
+}
+
+/* Smooth Animation */
+.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+.dropdown .dropdown-menu {
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
+    display: block !important;
+}
+
+/* Pfeil Animation */
+.dropdown:hover .dropdown-toggle::after {
+    transform: rotate(180deg);
+}
+
+.dropdown-toggle::after {
+    transition: transform 0.2s ease;
+}
+
+/* Responsive: Nur auf Desktop */
+@media (min-width: 992px) {
+    .dropdown:hover .dropdown-menu {
+        display: block !important;
+    }
+}
+
+/* Mobile: Deaktiviere Hover */
+@media (max-width: 991px) {
+    .dropdown:hover .dropdown-menu {
+        display: none !important;
+    }
+
+    /* Bootstrap Standard auf Mobile */
+    .dropdown .dropdown-menu.show {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0) !important;
+    }
+}

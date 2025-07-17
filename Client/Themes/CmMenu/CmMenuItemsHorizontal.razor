@@ -1,0 +1,44 @@
+@namespace ToSic.Cre8magic.Theme.Basic.Themes.CmMenu
+@inherits MenuItemsBase
+
+
+<ul class="navbar-nav">
+    @foreach (var childPage in GetChildPages())
+    {
+        var _attributes = new Dictionary<string, object>
+                {
+                    ["href"] = GetUrl(childPage)
+                };
+
+        var _target = GetTarget(childPage);
+        if (!string.IsNullOrEmpty(_target))
+        {
+            _attributes["target"] = _target;
+        }
+
+        var isActive = childPage.PageId == PageState.Page.PageId;
+        var activeClass = isActive ? "active" : "";
+
+        if (!childPage.HasChildren)
+        {
+            <li class="nav-item">
+                <a class="nav-link @activeClass" @attributes="_attributes">@childPage.Name</a>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item dropdown @activeClass">
+                <a class="nav-link dropdown-toggle"
+                   id="@($"navDropdown{childPage.PageId}")"
+                   aria-expanded="false"
+                   @attributes="_attributes">
+                    @childPage.Name
+                </a>
+
+                <div class="dropdown-menu" aria-labelledby="@($"navDropdown{childPage.PageId}")">
+                    <CmMenuItemsHorizontal ParentPage="childPage" Pages="Pages" />
+                </div>
+            </li>
+        }
+    }
+</ul>
