@@ -1,6 +1,7 @@
 @namespace ToSic.Cre8magic.Theme.Basic
 @inherits ThemeBase
 @inject OqtaneSettings OqtaneSettings
+@using ToSic.Cre8magic.Theme.Basic.Themes.CmMenu
 
 @code {
     /// <summary>
@@ -29,7 +30,8 @@
 <div data-bs-theme ="default-theme" data-theme-variant="@Variant">
     @* FYI: data-bs-theme is for colors/fonts; data-theme-variant is for sizing etc. *@
     <nav id="theme-page-navigation" class="navbar navbar-dark bg-primary sticky-top">
-        <Logo /><Menu Orientation="Horizontal" />
+        <Logo />
+        <CmMenu Orientation="Horizontal" />
         <div class="controls ms-auto">
             <div class="controls-group">
                 <UserProfile ShowRegister="@Settings.ShowRegister" />
