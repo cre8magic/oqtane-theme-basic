@@ -11113,65 +11113,85 @@ html body [data-bs-theme=default-theme] div[id^=module-] {
   margin: 0;
 }
 
+/* Hover Dropdown  */
 .dropdown:hover .dropdown-menu {
   display: block !important;
 }
 
+/* Child Items Hover-Farbe */
 .dropdown-menu .dropdown-item:hover {
   color: var(--bs-primary) !important;
-  background-color: transparent;
+  background-color: rgba(var(--bs-primary-rgb), 0.1);
 }
 
-/* Hover Dropdown - Nur CSS */
-.dropdown:hover .dropdown-menu {
-  display: block !important;
-  margin-top: 0;
+/* Mobile: Standard Bootstrap Verhalten beibehalten */
+@media (max-width: 991px) {
+  .dropdown:hover .dropdown-menu {
+    display: none !important;
+  }
+  .dropdown .dropdown-menu.show {
+    display: block !important;
+  }
 }
-
-.dropdown .dropdown-menu {
-  transition: all 0.2s ease-in-out;
-  margin-top: 0;
-}
-
-/* Smooth Animation */
-.dropdown:hover .dropdown-menu {
-  opacity: 1;
-  transform: translateY(0);
-  visibility: visible;
-}
-
-.dropdown .dropdown-menu {
-  opacity: 0;
-  transform: translateY(-10px);
-  visibility: hidden;
-  display: block !important;
-}
-
 /* Pfeil Animation */
 .dropdown:hover .dropdown-toggle::after {
   transform: rotate(180deg);
 }
 
-.dropdown-toggle::after {
-  transition: transform 0.2s ease;
+/*///
+
+
+/*.dropdown-menu .dropdown-item:hover {
+    color: var(--bs-primary) !important;
+    background-color: transparent;
+}*/
+/* Hover Dropdown - Nur CSS */
+/*.dropdown:hover .dropdown-menu {
+    display: block !important;
+    margin-top: 0;
 }
 
+.dropdown .dropdown-menu {
+    transition: all 0.2s ease-in-out;
+    margin-top: 0;
+}*/
+/* Smooth Animation */
+/*.dropdown:hover .dropdown-menu {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+.dropdown .dropdown-menu {
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
+    display: block !important;
+}*/
+/* Pfeil Animation */
+/*.dropdown:hover .dropdown-toggle::after {
+    transform: rotate(180deg);
+}
+
+.dropdown-toggle::after {
+    transition: transform 0.2s ease;
+}*/
 /* Responsive: Nur auf Desktop */
-@media (min-width: 992px) {
-  .dropdown:hover .dropdown-menu {
-    display: block !important;
-  }
-}
+/*@media (min-width: 992px) {
+    .dropdown:hover .dropdown-menu {
+        display: block !important;
+    }
+}*/
 /* Mobile: Deaktiviere Hover */
-@media (max-width: 991px) {
-  .dropdown:hover .dropdown-menu {
-    display: none !important;
-  }
-  /* Bootstrap Standard auf Mobile */
-  .dropdown .dropdown-menu.show {
-    display: block !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    transform: translateY(0) !important;
-  }
-}
+/*@media (max-width: 991px) {
+    .dropdown:hover .dropdown-menu {
+        display: none !important;
+    }*/
+/* Bootstrap Standard auf Mobile */
+/*.dropdown .dropdown-menu.show {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0) !important;
+    }
+}*/
