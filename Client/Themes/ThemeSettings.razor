@@ -141,17 +141,17 @@
     </div>
 
     @* Theme CSS *@
-    <div class="accordion mb-3" id="themeColorAccordion">
+    <div class="accordion mb-3" id="themeCssAccordion">
         <div class="accordion-item">
-            <h2 class="accordion-header" id="headingThemeColor">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThemeColor" aria-expanded="false" aria-controls="collapseThemeColor">
+            <h2 class="accordion-header" id="headingThemeCss">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThemeCss" aria-expanded="false" aria-controls="collapseThemeCss">
                     @SharedLocalizer["Theme Css"]
                 </button>
             </h2>
-            <div id="collapseThemeColor" class="accordion-collapse collapse" aria-labelledby="headingThemeColor" data-bs-parent="#themeColorAccordion">
+            <div id="collapseThemeCss" class="accordion-collapse collapse" aria-labelledby="headingThemeCss" data-bs-parent="#themeCssAccordion">
                 <div class="accordion-body">
                     <div class="row mb-1 align-items-center">
-                        <Label class="col-sm-3" For="themeCss" ResourceKey="ThemeCss" ResourceType="@ThemeSettingsType" HelpText="Here you can insert your own Theme CSS.">Theme Color:</Label>
+                        <Label class="col-sm-3" For="themeCss" ResourceKey="ThemeCss" ResourceType="@ThemeSettingsType" HelpText="Here you can insert your own Theme CSS.">Theme Css:</Label>
                         <div class="col-sm-9">
                             <textarea id="themeCss" class="form-control" @bind="_editor[MyThemeSettings.KeyThemeCss].Value" rows="2"></textarea>
                             @if (_editor.ShowFallback(MyThemeSettings.KeyThemeCss))

@@ -1,0 +1,15 @@
+﻿@namespace ToSic.Cre8magic.Theme.Basic.Themes.CmMenu
+
+@inherits Menu
+
+@switch (Orientation)
+{
+    case "Horizontal":
+        <CmMenuHorizontal/>
+        break;
+    default: // Vertical
+    {
+        <MenuVertical/>
+        break;
+    }
+}

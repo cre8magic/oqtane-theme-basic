@@ -29,21 +29,33 @@
     <PackageReference Include="Oqtane.Shared" Version="6.1.3" />
   </ItemGroup>
 
-  <!-- Make sure node_modules exists, otherwise run npm ci-->
-	<Target Name="RunNpmInstallOrCi" BeforeTargets="Build" Condition="!Exists('node_modules')">
-		<Exec Command="if exist package-lock.json (npm ci) else (npm install)" />
-	</Target>
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
+  </ItemGroup>
 
-	<Target Name="BuildFrontend" BeforeTargets="Build" DependsOnTargets="RunNpmInstallOrCi" Condition="'$(Configuration)' == 'Release'">
-		<Exec Command="npm run build" />
-	</Target>
+  <!-- This target ensures that `node_modules` exists before building.
+  If it doesn't exist, it checks for `package-lock.json` and runs `npm ci` (clean install),
+  otherwise it falls back to `npm install`. -->
+  <Target Name="RunNpmInstallOrCi" BeforeTargets="Build" Condition="!Exists('node_modules')">
+    <Exec Command="if exist package-lock.json (npm ci) else (npm install)" />
+  </Target>
 
-	<Target Name="BuildFrontendDebug" BeforeTargets="Build" DependsOnTargets="RunNpmInstallOrCi" Condition="'$(Configuration)' == 'Debug'">
-		<Exec Command="npm run dev" />
-	</Target>
+  <!--This target builds the frontend (e.g. compiles JS and SCSS via Vite) using `npm run build`.
+  It only runs during the Release configuration.
+  It depends on `RunNpmInstallOrCi` to ensure all dependencies are installed first.-->
+  <Target Name="BuildFrontend" BeforeTargets="Build" DependsOnTargets="RunNpmInstallOrCi" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="npm run build" />
+  </Target>
+
+  <!-- This target runs the frontend development server (e.g. Vite's dev mode) using `npm run dev`.
+  It only runs during the Debug configuration.
+  It also depends on `RunNpmInstallOrCi` to ensure dependencies are available -->
+  <Target Name="BuildFrontendDebug" BeforeTargets="Build" DependsOnTargets="RunNpmInstallOrCi" Condition="'$(Configuration)' == 'Debug'">
+    <Exec Command="npm run dev" />
+  </Target>
 
   <PropertyGroup>
-    <!-- there may be other elements here -->
+  <!-- there may be other elements here -->
     <BlazorWebAssemblyEnableLinking>false</BlazorWebAssemblyEnableLinking>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Nullable>enable</Nullable>

@@ -19,8 +19,8 @@ public class ThemeInfo : ITheme
         [
             new Stylesheet("~/Theme.css"),
             new Stylesheet("~/Oqtane.css"),
-            new Stylesheet ("~/styles.min.css"), // Bootstrap generated with Sass/Webpack
-            new Script("~/bootstrap.bundle.min.js"),
+            new Stylesheet ("~/styles.min.css"), // Sass build with vite
+            new Script("~/bootstrap.bundle.min.js"), // Bootstrap build with vite
         ]
     };
 

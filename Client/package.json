@@ -1,7 +1,6 @@
 {
   "name": "ToSic.Cre8magic-Theme-Basic",
   "version": "01.00.00",
-  "main": "(none)",
   "scripts": {
     "dev": "vite build --mode dev",
     "build": "vite build",
